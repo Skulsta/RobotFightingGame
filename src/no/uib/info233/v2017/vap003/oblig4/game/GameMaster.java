@@ -172,8 +172,8 @@ public class GameMaster {
 		database.displayScoreboard();
 		System.out.println();
 
-		database.updateDatabseRanking(player1);
-		database.updateDatabseRanking(player2);
+		database.updateDatabseRanking(player1.getName(), player1.getScore());
+		database.updateDatabseRanking(player2.getName(), player2.getScore());
 
 		System.out.println("The score is now: ");
 		database.displayScoreboard();

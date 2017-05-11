@@ -6,14 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import no.uib.info233.v2017.vap003.oblig4.player.Player;
-
 public class DatabaseScoreboard {
 
-	public void updateDatabseRanking(Player p) {
-		
-		String playerName = p.getName();
-		float playerScore = p.getScore();
+	public void updateDatabseRanking(String playerName, float playerScore) {
 		
 
 		// Using "try" so the connection closes itself.
