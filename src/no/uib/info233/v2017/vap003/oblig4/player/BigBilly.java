@@ -40,7 +40,7 @@ public class BigBilly extends Player {
 			}
 		}
 		
-		gameMaster.listenToPlayerMove(this, result);
+		getGameMaster().listenToPlayerMove(this, result);
 	}
 
 }

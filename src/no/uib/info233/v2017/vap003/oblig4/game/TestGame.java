@@ -12,7 +12,7 @@ public class TestGame {
 	private Player steve = new Player("Wha");
 	
 	// Assigning the GameMaster instance to a variable.
-	GameMaster game = GameMaster.getGameMaster();
+	GameMaster game = new GameMaster();
 
 	
 	// Sets the game and registers the players so everything is setup to start a game.

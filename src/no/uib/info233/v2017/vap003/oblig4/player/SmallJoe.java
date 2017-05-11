@@ -39,7 +39,7 @@ public class SmallJoe extends Player{
 			}
 		}
 		
-		gameMaster.listenToPlayerMove(this, result);
+		getGameMaster().listenToPlayerMove(this, result);
 	}
 
 }

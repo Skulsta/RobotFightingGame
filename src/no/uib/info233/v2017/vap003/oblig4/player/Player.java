@@ -9,7 +9,7 @@ public class Player {
 	private String name;
 	private float score;
 	private int energy = 10;
-	protected GameMaster gameMaster;
+	private GameMaster gameMaster;
 	
 	/**
 	 * A constructor that creates a player with the specified name.
@@ -32,7 +32,7 @@ public class Player {
 	
 	// Register the gameMaster
 	public void registerGameMaster(GameMaster gameMaster) {
-		this.gameMaster = GameMaster.getGameMaster();
+		this.gameMaster = gameMaster;
 	}
 	
 	
@@ -84,7 +84,6 @@ public class Player {
 	public void gameOver (float earnedPoints) {
 		
 		score = earnedPoints;
-		
 		System.out.println(this.getName() + " recieved: " + earnedPoints + " points!");
 	}
 
@@ -108,5 +107,9 @@ public class Player {
 	
 	public float getScore() {
 		return score;
+	}
+	
+	public GameMaster getGameMaster() {
+		return gameMaster;
 	}
 }

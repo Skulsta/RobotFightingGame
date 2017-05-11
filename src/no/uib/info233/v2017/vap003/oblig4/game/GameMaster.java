@@ -13,9 +13,6 @@ import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
 public class GameMaster {
 
-	// Create an object of GameMaster
-	private static GameMaster gameMaster = new GameMaster();
-
 	//Current position on the arena.
 	private int position = 0;
 
@@ -33,14 +30,8 @@ public class GameMaster {
 
 
 	// Private constructor so that the class cannot be instantiated.
-	private GameMaster() {
+	public GameMaster() {
 
-	}
-
-
-	// Get the only object available
-	public static GameMaster getGameMaster() {
-		return gameMaster;
 	}
 
 
@@ -94,6 +85,7 @@ public class GameMaster {
 		//  if the game is over; both players are out of energy or a player has been defeated.
 		if ((position == -3 || position == 3)) {
 
+			System.out.println("------------");
 			player1.gameOver(score + (score * position));
 			player2.gameOver(score - (score * position));
 			updateRanking();
@@ -101,6 +93,7 @@ public class GameMaster {
 
 		else if ((player1.getEnergy() == 0) && (player2.getEnergy() == 0)) {
 
+			System.out.println("------------");
 			player1.gameOver(score + (positionPoints * position));
 			player2.gameOver(score - (positionPoints * position));
 			updateRanking();
