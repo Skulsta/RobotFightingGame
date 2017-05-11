@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import no.uib.info233.v2017.vap003.oblig3.Player;
+import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
 public class DatabaseScoreboard {
 

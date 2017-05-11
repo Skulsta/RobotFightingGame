@@ -1,6 +1,6 @@
 package no.uib.info233.v2017.vap003.oblig4.game;
-import no.uib.info233.v2017.vap003.oblig3.Player;
 import no.uib.info233.v2017.vap003.oblig4.database.DatabaseScoreboard;
+import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
 /** The game arena is divided into 7 circles. The circle in the middle is number 2.
  * Each robot start at their own "-1" circle and want to reach their "5" circle, which is also

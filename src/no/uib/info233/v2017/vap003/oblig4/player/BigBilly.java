@@ -1,4 +1,4 @@
-package no.uib.info233.v2017.vap003.oblig3;
+package no.uib.info233.v2017.vap003.oblig4.player;
 
 import java.util.Random;
 
