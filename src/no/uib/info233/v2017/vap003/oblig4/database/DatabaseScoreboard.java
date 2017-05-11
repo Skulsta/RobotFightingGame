@@ -42,14 +42,12 @@ public class DatabaseScoreboard {
 			// methods.
 			String updateScore = null;
 			boolean playerFound = false;
-			while (resultsetSelect.next()) { // Move the cursor to the next row,
+			while (resultsetSelect.next() && !playerFound) { // Move the cursor to the next row,
 												// return false if no more rows.
-				
 				
 				String player = resultsetSelect.getString("player");
 				// If the player is already registered in the database, update
 				// his score by adding the score from this game.
-				updateScore = null;
 				if (player.equals(playerName)) {
 					updateScore = "update ranking set score = score + " + playerScore + " where player = " + "'"
 							+ playerName + "'";

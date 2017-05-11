@@ -82,6 +82,7 @@ public class Player {
 	 * @return 
 	 */
 	public void gameOver (float earnedPoints) {
+		
 		score = earnedPoints;
 		
 		System.out.println(this.getName() + " recieved: " + earnedPoints + " points!");
@@ -108,7 +109,4 @@ public class Player {
 	public float getScore() {
 		return score;
 	}
-	
-	
-	
 }
