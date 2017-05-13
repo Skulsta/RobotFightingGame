@@ -30,7 +30,7 @@ public class GameGUI extends JFrame implements ActionListener{
 	
 	private String message = "The Almighty Console \n \n";
 	protected static JButton inputButton = new JButton("Confirm");
-	protected JTextField textField = new JTextField("Type a name here:");
+	protected JTextField textField = new JTextField("");
 	protected JTextArea textArea = new JTextArea(message);
 	private final static String newLine = "\n";
 
