@@ -69,14 +69,13 @@ public class GameGUI extends JFrame implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				Player player = new HumanPlayer (textField.getText());
 				textField.setText("");
-				message = "Player " + player.getName() + " added to game.";
-				sendMessage();
+				sendMessage("Player " + player.getName() + " added to game.");
 			}
 		});
 	}
 	
 	
-	public void sendMessage() {
+	public void sendMessage(String message) {
 		textArea.append(message + newLine);
 	}
         
@@ -104,6 +103,10 @@ public class GameGUI extends JFrame implements ActionListener{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//	Set up the content pane
+		JComponent newContentPane = new WelcomeGUI();
+		newContentPane.setOpaque(true);
+		frame.setContentPane(newContentPane);
+		
 		addComponentsToPane (frame.getContentPane());
 		
 		//	Display the window
