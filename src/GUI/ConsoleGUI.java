@@ -32,11 +32,6 @@ public class ConsoleGUI {
 	}
 	
 	
-	public JTextArea getTextArea () {
-		return textArea;
-	}
-	
-	
 	public String getMessage() {
 		return message;
 	}

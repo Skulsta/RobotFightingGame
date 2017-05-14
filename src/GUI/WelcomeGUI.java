@@ -22,7 +22,9 @@ public class WelcomeGUI extends JPanel implements ActionListener {
 	private JTextField insertName = new JTextField();
 	private JButton submitName = new JButton("Confirm");
 	private JPanel welcomePanel;
+	private GamePanel gamePanel = new GamePanel();
 	private Player player;
+	private GameLayout gameLayout;
 	
 	public WelcomeGUI () {
 		
@@ -47,10 +49,9 @@ public class WelcomeGUI extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		player = new HumanPlayer (insertName.getText());
 		insertName.setText("");
-		ConsoleGUI.sendToConsole("Player " + player.getName() + " added to game.");
+		ConsoleGUI.sendToConsole("Player " + player.getName() + " added to the game.");
 		
 		//TODO Make new panel
-		
 	}
 	
 	
