@@ -8,9 +8,9 @@ import javax.swing.JTextArea;
 
 public class ConsoleGUI {
 	
-	private String message = "The Almighty Console \n \n";
-	private JTextArea textArea = new JTextArea(message);
-	private final static String newLine = "\n";
+	private static String message = "The Almighty Console \n \n";
+	private static JTextArea textArea = new JTextArea(message);
+	public final static String newLine = "\n";
 	
 	
 	public ConsoleGUI () {
@@ -22,13 +22,23 @@ public class ConsoleGUI {
 	}
 	
 	
-	public void sendToConsole(String message) {
+	public static void sendToConsole(String message) {
 		textArea.append(message + newLine);
 	}
 	
 	
 	public JTextArea getConsole() {
 		return textArea;
+	}
+	
+	
+	public JTextArea getTextArea () {
+		return textArea;
+	}
+	
+	
+	public String getMessage() {
+		return message;
 	}
 
 }

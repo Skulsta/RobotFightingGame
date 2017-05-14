@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import GUI.WelcomeGUI;
 import no.uib.info233.v2017.vap003.oblig4.player.HumanPlayer;
 import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
