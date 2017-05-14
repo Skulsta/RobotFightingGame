@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -118,8 +119,23 @@ public class GameLayout extends JPanel implements ActionListener{
 	public void createGameScreen () {
 		
 		gamePanel.setLayout(new FlowLayout());
-		JLabel roundMessage = new JLabel ("Round: " + roundNumber);
+		JLabel roundMessage = new JLabel (" Round: " + roundNumber + " ");
+		roundMessage.setOpaque(true);
+		roundMessage.setBackground(Color.BLACK);
+		roundMessage.setForeground(Color.WHITE);
+		
+		JLabel yourEnergy = new JLabel ("Your energy: " + String.valueOf(player.getEnergy()) + " - ");
+		yourEnergy.setOpaque(true);
+		// yourEnergy.setBackground(Color.BLUE);
+		
+		// TODO Make sure this is actually opponent energy level
+		JLabel opponentEnergy = new JLabel (" - Opponent energy: " + String.valueOf(player.getEnergy()));
+		yourEnergy.setOpaque(true);
+		// yourEnergy.setBackground(Color.BLUE);
+		
+		gamePanel.add(yourEnergy);
 		gamePanel.add(roundMessage);
+		gamePanel.add(opponentEnergy);
 		
 		remove(welcomePanel);
 		add (gamePanel, BorderLayout.CENTER);
