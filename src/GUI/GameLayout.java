@@ -128,13 +128,4 @@ public class GameLayout extends JPanel implements ActionListener{
 	}
 	
 	
-	public void game() {
-		
-		remove(welcomePanel);
-		add (gamePanel, BorderLayout.CENTER);
-		revalidate();
-		repaint();
-	}
-	
-	
 }
