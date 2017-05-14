@@ -142,7 +142,6 @@ public class GameMaster {
 			playerTwoMove = null;
 
 			// startGame is called to start a new round.
-			startGame();
 
 		}	
 	}
@@ -182,5 +181,21 @@ public class GameMaster {
 			return player2;
 		}
 		else throw new IllegalArgumentException("Not a valid input");
+	}
+	
+	
+	public Player getPlayer1 () {
+		return player1;
+	}
+	
+	
+	
+	public Player getPlayer2 () {
+		return player2;
+	}
+	
+	
+	public int getPosition() {
+		return position;
 	}
 }
