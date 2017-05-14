@@ -11,7 +11,6 @@ public class GameFrame {
 		JFrame frame = new JFrame();
 		
 		GameLayout panel = new GameLayout();
-		panel.createGUI();
 			
 		frame.setContentPane(panel);
 		frame.setTitle("Danger Zone");

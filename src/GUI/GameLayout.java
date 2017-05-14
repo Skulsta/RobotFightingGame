@@ -3,6 +3,7 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,7 +22,9 @@ public class GameLayout extends JPanel implements ActionListener{
 	// TODO remove soon
 	private ConsoleGUI console = new ConsoleGUI();
 	// private WelcomeGUI welcomePanel = new WelcomeGUI();
-	private GamePanel gamePanel = new GamePanel();
+	// private GamePanel gamePanel = new GamePanel();
+	
+	// private JPanel mainPanel = new JPanel();
 	
 	// For the startup screen
 	private JLabel welcome = new JLabel ("What's the player's name?");
@@ -35,12 +38,17 @@ public class GameLayout extends JPanel implements ActionListener{
 	private  JTextArea textArea = new JTextArea(message);
 	public final static String newLine = "\n";
 	
+	// For the gameplay
+	private JPanel gamePanel = new JPanel();
+	private int roundNumber = 1;
+	
+	
 	
 	public GameLayout () {
 		
 		defineWelcomeElements();
 		console();
-		
+		createGUI();
 		
 	}
 	
@@ -49,7 +57,7 @@ public class GameLayout extends JPanel implements ActionListener{
 		
 		setLayout (new BorderLayout());
 		
-		add(welcomePanel, BorderLayout.CENTER);
+		add (welcomePanel, BorderLayout.CENTER);
 		// add(label, BorderLayout.NORTH);
 		add(textArea, BorderLayout.EAST);
 		
@@ -87,10 +95,8 @@ public class GameLayout extends JPanel implements ActionListener{
 		player = new HumanPlayer (insertName.getText());
 		insertName.setText("");
 		sendToConsole("Player " + player.getName() + " added to the game.");
+		createGameScreen();
 	}
-	
-	
-	
 	
 	
 	// Setting up the console
@@ -104,6 +110,30 @@ public class GameLayout extends JPanel implements ActionListener{
 	
 	public void sendToConsole(String message) {
 		textArea.append(message + newLine);
+	}
+	
+	
+	// Getting into the gaming screen
+	
+	public void createGameScreen () {
+		
+		gamePanel.setLayout(new FlowLayout());
+		JLabel roundMessage = new JLabel ("Round: " + roundNumber);
+		gamePanel.add(roundMessage);
+		
+		remove(welcomePanel);
+		add (gamePanel, BorderLayout.CENTER);
+		revalidate();
+		repaint();
+	}
+	
+	
+	public void game() {
+		
+		remove(welcomePanel);
+		add (gamePanel, BorderLayout.CENTER);
+		revalidate();
+		repaint();
 	}
 	
 	
