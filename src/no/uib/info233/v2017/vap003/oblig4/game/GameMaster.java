@@ -1,4 +1,7 @@
 package no.uib.info233.v2017.vap003.oblig4.game;
+import GUI.ConsoleGUI;
+import GUI.GameFrame;
+import GUI.GameLayout;
 import no.uib.info233.v2017.vap003.oblig4.database.DatabaseScoreboard;
 import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
@@ -20,10 +23,14 @@ public class GameMaster {
 	// names for searching through the ranking table
 	private Player player1;
 	private Player player2;
+	
+	private ConsoleGUI console;
 
 	// Variable for storing the player's move in a round.
 	private Integer playerOneMove = null;
 	private Integer playerTwoMove = null;
+
+	private GameLayout gameLayout;
 
 	// Keeps track of how many rounds the players has played in a game.
 	private int round = 1;
@@ -110,6 +117,7 @@ public class GameMaster {
 		else {
 
 			System.out.println("Round: " + round);
+			GameLayout.sendToConsole("\nRound: " + round);
 			round++;
 
 			// If player one used more energy than player two, player one takes one step forward, player two the opposite.
@@ -136,66 +144,98 @@ public class GameMaster {
 					" New position: " + position + " Energy left: " + player2.getEnergy());	
 
 
-			// PlayerMove is set to null so the listenToPlayerMove() method is ready to
-			// listen to the players' next moves in the next round.
-			playerOneMove = null;
-			playerTwoMove = null;
 
-			// startGame is called to start a new round.
-
-		}	
-	}
+			GameLayout.sendToConsole(player1.getName() + " - Energy used: " + playerOneMove +
+					" - New position: " + position + " Energy left: " + player1.getEnergy());
+			
+			GameLayout.sendToConsole(player2.getName() + " - Energy used: " + playerTwoMove +
+					" - New position: " + position + " Energy left: " + player2.getEnergy());
 
 
-	/** Update the player rankings in the ranking table. Stored in
-	 *  the remote mySQL database. Using the table "ranking" and columns
-	 *  "player" and "score"
-	 *  Calls a separate class that handles the database logic.
-	 */
-	public void updateRanking() {
+		// PlayerMove is set to null so the listenToPlayerMove() method is ready to
+		// listen to the players' next moves in the next round.
+		playerOneMove = null;
+		playerTwoMove = null;
 
-		System.out.println("---------");
-		System.out.println("Game over");
-		System.out.println("---------");
+		// startGame is called to start a new round.
 
-		DatabaseScoreboard database = new DatabaseScoreboard();
-
-		System.out.println("Old Scoreboard: ");
-		database.displayScoreboard();
-		System.out.println();
-
-		database.updateDatabseRanking(player1.getName(), player1.getScore());
-		database.updateDatabseRanking(player2.getName(), player2.getScore());
-
-		System.out.println("The score is now: ");
-		database.displayScoreboard();
-
-	}
+	}	
+}
 
 
-	// Get method for player. Throws an exception if the player does not exist.
-	public Player getPlayer(Player player) {
-		if (player1.equals(player)) {
-			return player1;
-		} else if (player2.equals(player)) {
-			return player2;
-		}
-		else throw new IllegalArgumentException("Not a valid input");
-	}
+/** Update the player rankings in the ranking table. Stored in
+ *  the remote mySQL database. Using the table "ranking" and columns
+ *  "player" and "score"
+ *  Calls a separate class that handles the database logic.
+ */
+public void updateRanking() {
+
+	/**
+	System.out.println("---------");
+	System.out.println("Game over");
+	System.out.println("---------");
+
+	DatabaseScoreboard database = new DatabaseScoreboard();
+
+	System.out.println("Old Scoreboard: ");
+	database.displayScoreboard();
+	System.out.println();
+
+	database.updateDatabseRanking(player1.getName(), player1.getScore());
+	database.updateDatabseRanking(player2.getName(), player2.getScore());
+
+	System.out.println("The score is now: ");
+	database.displayScoreboard();
+	*/
 	
 	
-	public Player getPlayer1 () {
+	
+	GameLayout.sendToConsole("---------");
+	GameLayout.sendToConsole("Game over");
+	GameLayout.sendToConsole("---------");
+
+	DatabaseScoreboard database = new DatabaseScoreboard();
+
+	GameLayout.sendToConsole("Old Scoreboard: ");
+	database.displayScoreboard();
+	GameLayout.sendToConsole("");
+
+	database.updateDatabseRanking(player1.getName(), player1.getScore());
+	database.updateDatabseRanking(player2.getName(), player2.getScore());
+
+	GameLayout.sendToConsole("The score is now: ");
+	database.displayScoreboard();
+
+}
+
+
+// Get method for player. Throws an exception if the player does not exist.
+public Player getPlayer(Player player) {
+	if (player1.equals(player)) {
 		return player1;
-	}
-	
-	
-	
-	public Player getPlayer2 () {
+	} else if (player2.equals(player)) {
 		return player2;
 	}
-	
-	
-	public int getPosition() {
-		return position;
-	}
+	else throw new IllegalArgumentException("Not a valid input");
+}
+
+
+public Player getPlayer1 () {
+	return player1;
+}
+
+
+
+public Player getPlayer2 () {
+	return player2;
+}
+
+
+public int getPosition() {
+	return position;
+}
+
+public int getRound() {
+	return round;
+}
 }

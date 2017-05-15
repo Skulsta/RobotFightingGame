@@ -3,8 +3,6 @@ package GUI;
 import javax.swing.JFrame;
 
 public class GameFrame {
-	
-	private JFrame frame;
 
 	public static void main(String[] args) {
 		
