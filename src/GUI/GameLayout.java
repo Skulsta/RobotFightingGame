@@ -116,19 +116,19 @@ public class GameLayout extends JPanel implements ActionListener{
 			player1.registerGameMaster(gameMaster);
 
 			input.setText("");
-			sendToConsole("Player " + player.getName() + " is added to the game." + newLine);
+			ConsoleGUI.sendToConsole("Player " + player.getName() + " is added to the game." + newLine);
 			if (gameMaster.getPlayer1() == null) {
 				gameMaster.setPlayers(player, null);
-				sendToConsole("You are player1. Waiting for player 2...");
+				ConsoleGUI.sendToConsole("You are player1. Waiting for player 2...");
 			}
 			else if (gameMaster.getPlayer2() == null) {
 				gameMaster.setPlayers(gameMaster.getPlayer1(), player);
 				enemy = player1;
-				sendToConsole("Welcome " + player.getName() + "! \n" + "You are player 2. You're fighting against " +
+				ConsoleGUI.sendToConsole("Welcome " + player.getName() + "! \n" + "You are player 2. You're fighting against " +
 				enemy.getName() + newLine + "Get your opponent to arena '-3' to win." + newLine +
 				"If you get pushed back to arena 3, you lose." + newLine);
 			}
-			else sendToConsole("ERROR: Both spots are somehow taken");
+			else ConsoleGUI.sendToConsole("ERROR: Both spots are somehow taken");
 
 			player.registerGameMaster(gameMaster);
 			createGameScreen();
@@ -142,7 +142,7 @@ public class GameLayout extends JPanel implements ActionListener{
 			}
 			catch (NumberFormatException f) {
 				input.setText("");
-				sendToConsole("Enter a valid number.");
+				ConsoleGUI.sendToConsole("Enter a valid number.");
 			}
 		}
 	}

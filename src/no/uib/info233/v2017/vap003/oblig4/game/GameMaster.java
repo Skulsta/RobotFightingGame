@@ -117,7 +117,7 @@ public class GameMaster {
 		else {
 
 			System.out.println("Round: " + round);
-			GameLayout.sendToConsole("\nRound: " + round);
+			ConsoleGUI.sendToConsole("\nRound: " + round);
 			round++;
 
 			// If player one used more energy than player two, player one takes one step forward, player two the opposite.
@@ -145,10 +145,10 @@ public class GameMaster {
 
 
 
-			GameLayout.sendToConsole(player1.getName() + " - Energy used: " + playerOneMove +
+			ConsoleGUI.sendToConsole(player1.getName() + " - Energy used: " + playerOneMove +
 					" - New position: " + position + " Energy left: " + player1.getEnergy());
 			
-			GameLayout.sendToConsole(player2.getName() + " - Energy used: " + playerTwoMove +
+			ConsoleGUI.sendToConsole(player2.getName() + " - Energy used: " + playerTwoMove +
 					" - New position: " + position + " Energy left: " + player2.getEnergy());
 
 
@@ -190,21 +190,29 @@ public void updateRanking() {
 	
 	
 	
-	GameLayout.sendToConsole("---------");
-	GameLayout.sendToConsole("Game over");
-	GameLayout.sendToConsole("---------");
+	ConsoleGUI.sendToConsole("---------");
+	ConsoleGUI.sendToConsole("Game over");
+	ConsoleGUI.sendToConsole("---------");
 
 	DatabaseScoreboard database = new DatabaseScoreboard();
 
-	GameLayout.sendToConsole("Old Scoreboard: ");
+	ConsoleGUI.sendToConsole("Old Scoreboard: ");
 	database.displayScoreboard();
-	GameLayout.sendToConsole("");
+	ConsoleGUI.sendToConsole("");
 
 	database.updateDatabseRanking(player1.getName(), player1.getScore());
 	database.updateDatabseRanking(player2.getName(), player2.getScore());
 
-	GameLayout.sendToConsole("The score is now: ");
+	ConsoleGUI.sendToConsole("The score is now: ");
 	database.displayScoreboard();
+	
+	ConsoleGUI.sendToConsole("");
+	if (player1.getScore() > player2.getScore())
+		ConsoleGUI.sendToConsole(player1.getName() + " won!");
+	else if (player2.getScore() > player1.getScore())
+		ConsoleGUI.sendToConsole(player2.getName() + " won!");
+	else
+		ConsoleGUI.sendToConsole("It's a tie!");
 
 }
 

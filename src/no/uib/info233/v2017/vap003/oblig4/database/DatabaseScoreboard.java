@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import GUI.ConsoleGUI;
+
 public class DatabaseScoreboard {
 
 	public void updateDatabseRanking(String playerName, float playerScore) {
@@ -81,7 +83,7 @@ public class DatabaseScoreboard {
 			while (resultsetAfter.next()) {
 				String updatedPlayer = resultsetAfter.getString("player");
 				float updatedScore = resultsetAfter.getFloat("score");
-				System.out.println(updatedPlayer + " - score: " + updatedScore);
+				ConsoleGUI.sendToConsole(updatedPlayer + " - score: " + updatedScore);
 			}
 		}
 

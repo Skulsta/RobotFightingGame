@@ -24,7 +24,6 @@ public class ConsoleGUI extends JPanel {
 		setLayout (new BorderLayout());
 		
 		textArea = new JTextArea();
-		textArea.setEditable(false);
 		textArea.setBackground(Color.LIGHT_GRAY);
 		textArea = new JTextArea(message);
 		
@@ -33,6 +32,7 @@ public class ConsoleGUI extends JPanel {
 		scroll = new JScrollPane(textArea);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		add(scroll, BorderLayout.CENTER);
+		textArea.setEditable(false);
 		
 	}
 	
