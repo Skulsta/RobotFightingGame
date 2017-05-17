@@ -213,7 +213,6 @@ public void updateRanking() {
 		ConsoleGUI.sendToConsole(player2.getName() + " won!");
 	else
 		ConsoleGUI.sendToConsole("It's a tie!");
-
 }
 
 

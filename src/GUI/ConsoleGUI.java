@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
 public class ConsoleGUI extends JPanel {
 	
@@ -39,6 +40,7 @@ public class ConsoleGUI extends JPanel {
 	
 	public static void sendToConsole(String message) {
 		textArea.append(message + newLine);
+		textArea.setCaretPosition(textArea.getDocument().getLength());
 	}
 	
 	
