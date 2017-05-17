@@ -45,14 +45,16 @@ public class GameLayout extends JPanel implements ActionListener{
 	// For the gameplay
 	private JPanel gamePanel = new JPanel();
 	private GameMaster gameMaster = new GameMaster();
-	private int roundNumber = 1;
+	
+	private JLabel roundMessage;
+	private JLabel yourEnergy;
+	private JLabel opponentEnergy;
 
 
 
 	public GameLayout () {
 
 		defineWelcomeElements();
-		console();
 		createGUI();
 
 	}
@@ -98,9 +100,10 @@ public class GameLayout extends JPanel implements ActionListener{
 		int move = Integer.parseInt(input.getText());
 		if (move < 0 || move > player.getEnergy()) {
 			move = 0;
-			sendToConsole("Pay attention to your energy level! You spent 0 points.");
+			ConsoleGUI.sendToConsole("Pay attention to your energy level! You spent 0 points.");
 		}
 		input.setText("");
+		updateGameScreen();
 		return move;
 	}
 
@@ -154,20 +157,6 @@ public class GameLayout extends JPanel implements ActionListener{
 
 
 
-		// Setting up the console
-
-		public void console() {
-			textArea.setEditable(false);
-			textArea.setPreferredSize(new Dimension (500, 100));
-			textArea.setBackground(Color.LIGHT_GRAY);
-		}
-
-
-		public static void sendToConsole(String message) {
-			textArea.append(message + newLine);
-		}
-
-
 		// Getting into the gaming screen
 
 		public void createGameScreen () {
@@ -180,17 +169,17 @@ public class GameLayout extends JPanel implements ActionListener{
 
 			// Adds round number, your energy level and opponent's energy level to the top.
 
-			JLabel roundMessage = new JLabel (" Round: " + roundNumber + " ");
+			roundMessage = new JLabel (" Round: " + gameMaster.getRound() + " ");
 			roundMessage.setOpaque(true);
 			roundMessage.setBackground(Color.BLACK);
 			roundMessage.setForeground(Color.WHITE);
 
-			JLabel yourEnergy = new JLabel ("Your energy: " + String.valueOf(player.getEnergy()) + " - ");
+			yourEnergy = new JLabel ("Your energy: " + String.valueOf(player.getEnergy()) + " - ");
 			yourEnergy.setOpaque(true);
 			// yourEnergy.setBackground(Color.BLUE);
 
 			// TODO Make sure this is actually opponent energy level
-			JLabel opponentEnergy = new JLabel (" - Opponent's energy: " + String.valueOf(player.getEnergy()));
+			opponentEnergy = new JLabel (" - Opponent's energy: " + String.valueOf(player.getEnergy()));
 			yourEnergy.setOpaque(true);
 			// yourEnergy.setBackground(Color.BLUE);
 
@@ -208,6 +197,15 @@ public class GameLayout extends JPanel implements ActionListener{
 			actionBar();
 
 			swapPanel (welcomePanel, gamePanel);
+		}
+		
+		public void updateGameScreen() {
+			gamePanel.removeAll();
+			createGameScreen();
+			gamePanel.revalidate();
+			gamePanel.repaint();
+			input.requestFocus();
+			
 		}
 
 
