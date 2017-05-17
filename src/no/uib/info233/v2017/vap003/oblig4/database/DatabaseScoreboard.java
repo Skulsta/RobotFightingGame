@@ -78,7 +78,7 @@ public class DatabaseScoreboard {
 				Statement statementAfter = connect.createStatement();
 
 		) {
-			String stringSelect = "select player, score from ranking";
+			String stringSelect = "select player, score from ranking order by score desc";
 			ResultSet resultsetAfter = statementAfter.executeQuery(stringSelect);
 			while (resultsetAfter.next()) {
 				String updatedPlayer = resultsetAfter.getString("player");

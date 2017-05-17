@@ -198,6 +198,9 @@ public void updateRanking() {
 	ConsoleGUI.sendToConsole("---------");
 	ConsoleGUI.sendToConsole("Game over");
 	ConsoleGUI.sendToConsole("---------");
+	
+	ConsoleGUI.sendToConsole(player1.getName() + " recieved: " + player1.getScore() + " points.");
+	ConsoleGUI.sendToConsole(player2.getName() + " recieved: " + player2.getScore() + " points. \n");
 
 	DatabaseScoreboard database = new DatabaseScoreboard();
 

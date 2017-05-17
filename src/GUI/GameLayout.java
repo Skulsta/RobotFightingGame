@@ -266,6 +266,5 @@ public class GameLayout extends JPanel implements ActionListener{
 			actionPanel.add(submitMove);
 
 			gamePanel.add(actionPanel);
-
 		}
 	}
