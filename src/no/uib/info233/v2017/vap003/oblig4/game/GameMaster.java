@@ -47,6 +47,11 @@ public class GameMaster {
 		this.player1 = player1;
 		this.player2 = player2;
 	}
+	
+	
+	public void setInterface(GameLayout gameLayout) {
+		this.gameLayout = gameLayout;
+	}
 
 
 	/** Sends a message to each of the players to come up with their next move.
@@ -128,6 +133,9 @@ public class GameMaster {
 			
 			ConsoleGUI.sendToConsole(player2.getName() + " - Energy used: " + playerTwoMove +
 					" - New position: " + position + " Energy left: " + player2.getEnergy());
+			
+			
+			gameLayout.updateGameScreen();
 
 
 		// PlayerMove is set to null so the listenToPlayerMove() method is ready to

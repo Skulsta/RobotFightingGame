@@ -103,7 +103,6 @@ public class GameLayout extends JPanel implements ActionListener{
 			ConsoleGUI.sendToConsole("Pay attention to your energy level! You spent 0 points.");
 		}
 		input.setText("");
-		updateGameScreen();
 		return move;
 	}
 
@@ -117,6 +116,7 @@ public class GameLayout extends JPanel implements ActionListener{
 			Player player1 = new Player("Bill");
 			gameMaster.setPlayers(player1, null);
 			player1.registerGameMaster(gameMaster);
+			gameMaster.setInterface(this);
 
 			input.setText("");
 			ConsoleGUI.sendToConsole("Player " + player.getName() + " is added to the game." + newLine);
@@ -179,7 +179,7 @@ public class GameLayout extends JPanel implements ActionListener{
 			// yourEnergy.setBackground(Color.BLUE);
 
 			// TODO Make sure this is actually opponent energy level
-			opponentEnergy = new JLabel (" - Opponent's energy: " + String.valueOf(player.getEnergy()));
+			opponentEnergy = new JLabel (" - Opponent's energy: " + String.valueOf(enemy.getEnergy()));
 			yourEnergy.setOpaque(true);
 			// yourEnergy.setBackground(Color.BLUE);
 
@@ -214,7 +214,6 @@ public class GameLayout extends JPanel implements ActionListener{
 			add (added, BorderLayout.CENTER);
 			revalidate();
 			repaint();
-
 		}
 
 		public void createArenaLabel(String message) {
@@ -259,8 +258,12 @@ public class GameLayout extends JPanel implements ActionListener{
 
 			input.setMaximumSize(new Dimension (50, 25));
 			input.setPreferredSize(new Dimension (50, 25));
+			
+			JButton submitMove = new JButton("Submit");
+			submitMove.addActionListener(this);
 
 			actionPanel.add(input);
+			actionPanel.add(submitMove);
 
 			gamePanel.add(actionPanel);
 
