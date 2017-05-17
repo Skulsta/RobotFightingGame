@@ -136,9 +136,14 @@ public class GameLayout extends JPanel implements ActionListener{
 		}
 		else {
 			try {
-				Integer.parseInt(input.getText());
-				enemy.makeNextMove(gameMaster.getPosition(), enemy.getEnergy(), player.getEnergy());
-				gameMaster.listenToPlayerMove(player, getMove());
+				int move = Integer.parseInt(input.getText());
+				if (move >= 0 || move <= player.getEnergy()) {
+					enemy.makeNextMove(gameMaster.getPosition(), enemy.getEnergy(), player.getEnergy());
+					gameMaster.listenToPlayerMove(player, getMove());
+				}
+				else {
+					throw new NumberFormatException();
+				}
 			}
 			catch (NumberFormatException f) {
 				input.setText("");

@@ -89,32 +89,10 @@ public class GameMaster {
 		float positionPoints = 0.25f;
 
 
-		//  if the game is over; both players are out of energy or a player has been defeated.
-		if ((position == -3 || position == 3)) {
-
-			System.out.println("------------");
-			player1.gameOver(score + (score * position));
-			player2.gameOver(score - (score * position));
-			updateRanking();
-		}
-
-		else if ((player1.getEnergy() == 0) && (player2.getEnergy() == 0)) {
-
-			System.out.println("------------");
-			player1.gameOver(score + (positionPoints * position));
-			player2.gameOver(score - (positionPoints * position));
-			updateRanking();
-		}
-
-		// Making sure nothing weird happens.
-		else if (position < -3 || position > 3) 
-			System.out.println("The robots are somehow outside of the arena.");
-
-
 
 		// If the game is still not over
 
-		else {
+		// else {
 
 			System.out.println("Round: " + round);
 			ConsoleGUI.sendToConsole("\nRound: " + round);
@@ -158,9 +136,28 @@ public class GameMaster {
 		playerTwoMove = null;
 
 		// startGame is called to start a new round.
+		
+		//  if the game is over; both players are out of energy or a player has been defeated.
+		if ((position == -3 || position == 3)) {
 
+			System.out.println("------------");
+			player1.gameOver(score + (score * position));
+			player2.gameOver(score - (score * position));
+			updateRanking();
+		}
+
+		else if ((player1.getEnergy() == 0) && (player2.getEnergy() == 0)) {
+
+			System.out.println("------------");
+			player1.gameOver(score + (positionPoints * position));
+			player2.gameOver(score - (positionPoints * position));
+			updateRanking();
+		}
+
+		// Making sure nothing weird happens.
+		else if (position < -3 || position > 3) 
+			System.out.println("The robots are somehow outside of the arena.");
 	}	
-}
 
 
 /** Update the player rankings in the ranking table. Stored in
