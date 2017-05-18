@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,10 +14,16 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+import javax.swing.text.JTextComponent;
 
 import no.uib.info233.v2017.vap003.oblig4.game.GameMaster;
 import no.uib.info233.v2017.vap003.oblig4.player.HumanPlayer;
@@ -27,7 +34,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 	// private JPanel mainPanel = new JPanel();
 
-	// For the startup screen
+	// For the start screen
 	private JLabel welcome = new JLabel ("What's the player's name?");
 	private JTextField input = new JTextField();
 	private JButton submit = new JButton("Confirm");
@@ -37,8 +44,6 @@ public class GameLayout extends JPanel implements ActionListener{
 	private boolean gameStarted;
 
 	// For the console
-	private static  String message = "The Almighty Console \n \n";
-	private static  JTextArea textArea = new JTextArea(message);
 	public final static String newLine = "\n";
 	private static ConsoleGUI console = new ConsoleGUI();
 
@@ -49,12 +54,26 @@ public class GameLayout extends JPanel implements ActionListener{
 	private JLabel roundMessage;
 	private JLabel yourEnergy;
 	private JLabel opponentEnergy;
+	
+	
+	// For the menu bar
+	private JMenuBar menubar;
+	private JMenu menu;
+	private JMenuItem local;
+	
+	
+	// For the real start screen
+	private JPanel startscreen;
+	private JLabel welcomeText = new JLabel ("Welcome! Select an option from the menu.");
+	
 
 
 
 	public GameLayout () {
 
+		createMenuBar();
 		defineWelcomeElements();
+		createStartPanel();
 		createGUI();
 
 	}
@@ -64,7 +83,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		setLayout (new BorderLayout());
 
-		add (welcomePanel, BorderLayout.CENTER);
+		add (welcomeText, BorderLayout.CENTER);
 		// add(label, BorderLayout.NORTH);
 		add(console, BorderLayout.EAST);
 
@@ -93,7 +112,6 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		welcomePanel.setMinimumSize(new Dimension(500, 500));
 		welcomePanel.setPreferredSize(new Dimension(500, 500));
-
 	}
 
 	public int getMove () {
@@ -234,7 +252,7 @@ public class GameLayout extends JPanel implements ActionListener{
 			JPanel actionPanel = new JPanel();
 			actionPanel.setLayout(new GridBagLayout());
 
-			JLabel actionMessage = new JLabel (message);
+			JLabel actionMessage = new JLabel ("Hm.");
 
 
 			input.setMaximumSize(new Dimension (50, 25));
@@ -266,5 +284,55 @@ public class GameLayout extends JPanel implements ActionListener{
 			actionPanel.add(submitMove);
 
 			gamePanel.add(actionPanel);
+		}
+		
+		
+		// The menu bar.
+		
+		public void createMenuBar() {
+			menubar = new JMenuBar();
+			menu = new JMenu("Local");
+			menubar.add(menu);
+			local = new JMenuItem("New Game");
+			menu.add(local);
+			local = new JMenuItem("Load Game");
+			menu.add(local);
+			
+			menu = new JMenu("Online");
+			menubar.add(menu);
+			local = new JMenuItem("Host Game");
+			menu.add(local);
+			local = new JMenuItem("Join Game");
+			menu.add(local);
+			
+			menubar.setVisible(true);
+			
+			
+			
+		}
+		
+		public JMenuBar getMenuBar() {
+			return menubar;
+		}
+		
+		
+		public void createStartPanel() {
+			/**
+			startscreen = new JPanel ();
+			startscreen.setLayout(new BorderLayout());
+			startscreen.setMinimumSize(new Dimension(500, 500));
+			startscreen.setPreferredSize(new Dimension(500, 500));
+			
+			JPanel startBox = new JPanel();
+			startBox.setLayout(new BoxLayout(startBox, BoxLayout.Y_AXIS));
+			*/
+			
+
+			// welcomeText.setEditable(false);
+			welcomeText.setHorizontalAlignment(SwingConstants.CENTER);
+			welcomeText.setPreferredSize(new Dimension(500, 500));
+			
+			
+			// startscreen.add(welcomeText, BorderLayout.CENTER);
 		}
 	}

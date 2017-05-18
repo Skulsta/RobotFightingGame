@@ -9,7 +9,8 @@ public class GameFrame {
 		JFrame frame = new JFrame();
 		
 		GameLayout panel = new GameLayout();
-			
+		
+		frame.setJMenuBar(panel.getMenuBar());
 		frame.setContentPane(panel);
 		frame.setTitle("Danger Zone");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

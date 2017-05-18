@@ -14,7 +14,7 @@ import javax.swing.text.DefaultCaret;
 public class ConsoleGUI extends JPanel {
 	
 	private static final long serialVersionUID = 1738734736633198221L;
-	private static String message = "The Almighty Console \n \n";
+	private static String message = "The Almighty Console \n \nIt's a beautiful day to fight robots!";
 	private static JTextArea textArea;
 	public final static String newLine = "\n";
 	private JScrollPane scroll;

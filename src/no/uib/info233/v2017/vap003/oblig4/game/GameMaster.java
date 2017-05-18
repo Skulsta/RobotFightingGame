@@ -135,7 +135,10 @@ public class GameMaster {
 					" - New position: " + position + " Energy left: " + player2.getEnergy());
 			
 			
+			// Updates the game layout with the new round and energy values.
 			gameLayout.updateGameScreen();
+			
+			
 
 
 		// PlayerMove is set to null so the listenToPlayerMove() method is ready to
