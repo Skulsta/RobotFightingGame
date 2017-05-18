@@ -294,6 +294,13 @@ public class GameLayout extends JPanel implements ActionListener{
 			menu = new JMenu("Local");
 			menubar.add(menu);
 			local = new JMenuItem("New Game");
+			local.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					swapPanel(welcomeText, welcomePanel);
+				}
+			});
 			menu.add(local);
 			local = new JMenuItem("Load Game");
 			menu.add(local);
