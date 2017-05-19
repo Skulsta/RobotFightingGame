@@ -50,22 +50,22 @@ public class GameLayout extends JPanel implements ActionListener{
 	// For the gameplay
 	private JPanel gamePanel = new JPanel();
 	private GameMaster gameMaster = new GameMaster();
-	
+
 	private JLabel roundMessage;
 	private JLabel yourEnergy;
 	private JLabel opponentEnergy;
-	
-	
+
+
 	// For the menu bar
 	private JMenuBar menubar;
 	private JMenu menu;
 	private JMenuItem local;
-	
-	
+
+
 	// For the real start screen
 	private JPanel startscreen;
 	private JLabel welcomeText = new JLabel ("Welcome! Select an option from the menu.");
-	
+
 
 
 
@@ -125,6 +125,12 @@ public class GameLayout extends JPanel implements ActionListener{
 	}
 
 
+	/**
+	 * The action to be performed when "Input" gets any input. This text field is used first when
+	 * assigning a name to a new player, after this, the field is used to choose the next move.
+	 * Input will then only accept integers. Otherwise, it casts an exception which it catches and
+	 * gives the user instructions on what to do.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!gameStarted) {
@@ -146,8 +152,8 @@ public class GameLayout extends JPanel implements ActionListener{
 				gameMaster.setPlayers(gameMaster.getPlayer1(), player);
 				enemy = player1;
 				ConsoleGUI.sendToConsole("Welcome " + player.getName() + "! \n" + "You are player 2. You're fighting against " +
-				enemy.getName() + newLine + "Get your opponent to arena '-3' to win." + newLine +
-				"If you get pushed back to arena 3, you lose." + newLine);
+						enemy.getName() + newLine + "Get your opponent to arena '-3' to win." + newLine +
+						"If you get pushed back to arena 3, you lose." + newLine);
 			}
 			else ConsoleGUI.sendToConsole("ERROR: Both spots are somehow taken");
 
@@ -175,172 +181,155 @@ public class GameLayout extends JPanel implements ActionListener{
 
 
 
-		// Getting into the gaming screen
+	/** Getting into the gaming screen. Includes info about play energy, round number,
+	 * which field the players are currently at, an input field for choosing next move
+	 * and a submit button. 
+	 * Calls the "swapPanels" method in order to remove the welcome screen and get into the game screen.
+	 */
 
-		public void createGameScreen () {
+	public void createGameScreen () {
 
-			gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
+		gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
 
-			JPanel topPanel = new JPanel();
-			topPanel.setLayout(new FlowLayout());
-
-
-			// Adds round number, your energy level and opponent's energy level to the top.
-
-			roundMessage = new JLabel (" Round: " + gameMaster.getRound() + " ");
-			roundMessage.setOpaque(true);
-			roundMessage.setBackground(Color.BLACK);
-			roundMessage.setForeground(Color.WHITE);
-
-			yourEnergy = new JLabel ("Your energy: " + String.valueOf(player.getEnergy()) + " - ");
-			yourEnergy.setOpaque(true);
-			// yourEnergy.setBackground(Color.BLUE);
-
-			// TODO Make sure this is actually opponent energy level
-			opponentEnergy = new JLabel (" - Opponent's energy: " + String.valueOf(enemy.getEnergy()));
-			yourEnergy.setOpaque(true);
-			// yourEnergy.setBackground(Color.BLUE);
-
-			topPanel.add(yourEnergy);
-			topPanel.add(roundMessage);
-			topPanel.add(opponentEnergy);
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new FlowLayout());
 
 
-			gamePanel.add(topPanel);
+		// Adds round number, your energy level and opponent's energy level to the top.
 
-			createArenaLabel("The current position is: " + gameMaster.getPosition());
+		roundMessage = new JLabel (" Round: " + gameMaster.getRound() + " ");
+		roundMessage.setOpaque(true);
+		roundMessage.setBackground(Color.BLACK);
+		roundMessage.setForeground(Color.WHITE);
 
-			createArenaLabel("Choose your next move");
+		yourEnergy = new JLabel ("Your energy: " + String.valueOf(player.getEnergy()) + " - ");
+		yourEnergy.setOpaque(true);
+		// yourEnergy.setBackground(Color.BLUE);
 
-			actionBar();
+		// TODO Make sure this is actually opponent energy level
+		opponentEnergy = new JLabel (" - Opponent's energy: " + String.valueOf(enemy.getEnergy()));
+		yourEnergy.setOpaque(true);
+		// yourEnergy.setBackground(Color.BLUE);
 
-			swapPanel (welcomePanel, gamePanel);
-		}
-		
-		public void updateGameScreen() {
-			gamePanel.removeAll();
-			createGameScreen();
-			gamePanel.revalidate();
-			gamePanel.repaint();
-			input.requestFocus();
-			
-		}
-
-
-		public void swapPanel (Component removed, Component added) {
-			remove(removed);
-			add (added, BorderLayout.CENTER);
-			revalidate();
-			repaint();
-		}
-
-		public void createArenaLabel(String message) {
-
-			JPanel arenaPanel = new JPanel();
-			arenaPanel.setLayout(new FlowLayout());
-
-			JLabel m = new JLabel (message);
-			arenaPanel.add(m);
-
-			gamePanel.add(arenaPanel);
-		}
+		topPanel.add(yourEnergy);
+		topPanel.add(roundMessage);
+		topPanel.add(opponentEnergy);
 
 
+		gamePanel.add(topPanel);
 
-		public void createActionPanel() {
+		createArenaLabel("The current position is: " + gameMaster.getPosition());
 
-			JPanel actionPanel = new JPanel();
-			actionPanel.setLayout(new GridBagLayout());
+		createArenaLabel("Choose your next move");
 
-			JLabel actionMessage = new JLabel ("Hm.");
+		actionBar();
 
-
-			input.setMaximumSize(new Dimension (50, 25));
-			input.setPreferredSize(new Dimension (50, 25));
-
-			submit.addActionListener(this);
-
-
-			actionPanel.add(actionMessage);
-			actionPanel.add(input);
-			actionPanel.add(submit);
-
-			gamePanel.add(actionPanel);
-		}
-
-
-		public void actionBar() {
-
-			JPanel actionPanel = new JPanel();
-			actionPanel.setLayout(new FlowLayout());
-
-			input.setMaximumSize(new Dimension (50, 25));
-			input.setPreferredSize(new Dimension (50, 25));
-			
-			JButton submitMove = new JButton("Submit");
-			submitMove.addActionListener(this);
-
-			actionPanel.add(input);
-			actionPanel.add(submitMove);
-
-			gamePanel.add(actionPanel);
-		}
-		
-		
-		// The menu bar.
-		
-		public void createMenuBar() {
-			menubar = new JMenuBar();
-			menu = new JMenu("Local");
-			menubar.add(menu);
-			local = new JMenuItem("New Game");
-			local.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					swapPanel(welcomeText, welcomePanel);
-					input.requestFocus();
-				}
-			});
-			menu.add(local);
-			local = new JMenuItem("Load Game");
-			menu.add(local);
-			
-			menu = new JMenu("Online");
-			menubar.add(menu);
-			local = new JMenuItem("Host Game");
-			menu.add(local);
-			local = new JMenuItem("Join Game");
-			menu.add(local);
-			
-			menubar.setVisible(true);
-			
-			
-			
-		}
-		
-		public JMenuBar getMenuBar() {
-			return menubar;
-		}
-		
-		
-		public void createStartPanel() {
-			/**
-			startscreen = new JPanel ();
-			startscreen.setLayout(new BorderLayout());
-			startscreen.setMinimumSize(new Dimension(500, 500));
-			startscreen.setPreferredSize(new Dimension(500, 500));
-			
-			JPanel startBox = new JPanel();
-			startBox.setLayout(new BoxLayout(startBox, BoxLayout.Y_AXIS));
-			*/
-			
-
-			// welcomeText.setEditable(false);
-			welcomeText.setHorizontalAlignment(SwingConstants.CENTER);
-			welcomeText.setPreferredSize(new Dimension(500, 500));
-			
-			
-			// startscreen.add(welcomeText, BorderLayout.CENTER);
-		}
+		swapPanel (welcomePanel, gamePanel);
 	}
+
+	
+	/** Update the information on the game screen after each round. Updates the player's
+	energy levels, round number and which field they are currently at.
+	Does so by removing the old components, adding the updated components and calling
+	revalidate and repaint. Also calls requestFocus so the input field is ready from the start. */
+	public void updateGameScreen() {
+		gamePanel.removeAll();
+		createGameScreen();
+		gamePanel.revalidate();
+		gamePanel.repaint();
+		input.requestFocus();
+
+	}
+
+
+	/**
+	 * Used when switching from one panel to a new one.
+	 * @param removed the component that is to be removed
+	 * @param added the component that is added
+	 * Swaps only the components on the CENTER position of the main panel. The only other part of
+	 * the main panel is the console part at the EAST position, which should always be there.
+	 */
+	public void swapPanel (Component removed, Component added) {
+		remove(removed);
+		add (added, BorderLayout.CENTER);
+		revalidate();
+		repaint();
+	}
+
+	// Used to create different informational messages on the gamePanel
+	public void createArenaLabel(String message) {
+		JPanel arenaPanel = new JPanel();
+		arenaPanel.setLayout(new FlowLayout());
+
+		JLabel m = new JLabel (message);
+		arenaPanel.add(m);
+
+		gamePanel.add(arenaPanel);
+	}
+
+
+
+	// Creates the part for user input for the game screen.
+	public void actionBar() {
+
+		JPanel actionPanel = new JPanel();
+		actionPanel.setLayout(new FlowLayout());
+
+		input.setMaximumSize(new Dimension (50, 25));
+		input.setPreferredSize(new Dimension (50, 25));
+
+		JButton submitMove = new JButton("Submit");
+		submitMove.addActionListener(this);
+
+		actionPanel.add(input);
+		actionPanel.add(submitMove);
+
+		gamePanel.add(actionPanel);
+	}
+
+
+	// The menu bar.
+	public void createMenuBar() {
+		menubar = new JMenuBar();
+		menu = new JMenu("Local");
+		menubar.add(menu);
+		local = new JMenuItem("New Game");
+		local.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				swapPanel(welcomeText, welcomePanel);
+				input.requestFocus();
+			}
+		});
+		menu.add(local);
+		local = new JMenuItem("Load Game");
+		menu.add(local);
+
+		menu = new JMenu("Online");
+		menubar.add(menu);
+		local = new JMenuItem("Host Game");
+		menu.add(local);
+		local = new JMenuItem("Join Game");
+		menu.add(local);
+
+		menubar.setVisible(true);
+
+
+
+	}
+
+	// Get method. Needed to add the menu to the Frame. Used in the GameFrame method.
+	public JMenuBar getMenuBar() {
+		return menubar;
+	}
+
+
+	// Creates the simple, first screen that the user sees. Tells them to use the menu.
+	// Makes the game window have a decent size when opened, and centers the text.
+	public void createStartPanel() {
+		// welcomeText.setEditable(false);
+		welcomeText.setHorizontalAlignment(SwingConstants.CENTER);
+		welcomeText.setPreferredSize(new Dimension(500, 500));
+	}
+}
