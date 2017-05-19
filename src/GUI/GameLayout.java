@@ -63,7 +63,6 @@ public class GameLayout extends JPanel implements ActionListener{
 		defineWelcomeElements();
 		createStartPanel();
 		createGUI();
-
 	}
 
 	// Adding two panels to the main panel
@@ -208,7 +207,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		createArenaLabel("The current position is: " + gameMaster.getPosition());
 
-		createArenaLabel("Choose your next move");
+		createArenaLabel("Choose your next move between 0 and " + player.getEnergy());
 
 		actionBar();
 
@@ -246,7 +245,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	
 	// When the game is over. Simply remove the game panel and add a label saying "Game Over". Center it.
 	public void removeInputField() {
-		JLabel gameOver = new JLabel("Game Over.");
+		JLabel gameOver = new JLabel("Game Over. -->");
 		gameOver.setHorizontalAlignment(SwingConstants.CENTER);
 		gameOver.setPreferredSize(new Dimension(500, 500));
 		swapPanel(gamePanel, gameOver);
@@ -324,5 +323,10 @@ public class GameLayout extends JPanel implements ActionListener{
 	public void createStartPanel() {
 		welcomeText.setHorizontalAlignment(SwingConstants.CENTER);
 		welcomeText.setPreferredSize(new Dimension(500, 500));
+	}
+	
+	// Used for Game_ID in database... maybe.
+	public long getSerialNumber() {
+		return serialVersionUID;
 	}
 }
