@@ -299,6 +299,7 @@ public class GameLayout extends JPanel implements ActionListener{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					swapPanel(welcomeText, welcomePanel);
+					input.requestFocus();
 				}
 			});
 			menu.add(local);
