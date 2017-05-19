@@ -5,35 +5,26 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
-import javax.swing.text.JTextComponent;
-
 import no.uib.info233.v2017.vap003.oblig4.game.GameMaster;
 import no.uib.info233.v2017.vap003.oblig4.player.HumanPlayer;
 import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
 public class GameLayout extends JPanel implements ActionListener{
 
-
-	// private JPanel mainPanel = new JPanel();
-
+	
+	private static final long serialVersionUID = 8945151505299015846L;
 	// For the start screen
 	private JLabel welcome = new JLabel ("What's the player's name?");
 	private JTextField input = new JTextField();
@@ -63,10 +54,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 
 	// For the real start screen
-	private JPanel startscreen;
 	private JLabel welcomeText = new JLabel ("Welcome! Select an option from the menu.");
-
-
 
 
 	public GameLayout () {
@@ -255,6 +243,14 @@ public class GameLayout extends JPanel implements ActionListener{
 		revalidate();
 		repaint();
 	}
+	
+	// When the game is over. Simply remove the game panel and add a label saying "Game Over". Center it.
+	public void removeInputField() {
+		JLabel gameOver = new JLabel("Game Over.");
+		gameOver.setHorizontalAlignment(SwingConstants.CENTER);
+		gameOver.setPreferredSize(new Dimension(500, 500));
+		swapPanel(gamePanel, gameOver);
+	}
 
 	// Used to create different informational messages on the gamePanel
 	public void createArenaLabel(String message) {
@@ -315,8 +311,6 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		menubar.setVisible(true);
 
-
-
 	}
 
 	// Get method. Needed to add the menu to the Frame. Used in the GameFrame method.
@@ -328,7 +322,6 @@ public class GameLayout extends JPanel implements ActionListener{
 	// Creates the simple, first screen that the user sees. Tells them to use the menu.
 	// Makes the game window have a decent size when opened, and centers the text.
 	public void createStartPanel() {
-		// welcomeText.setEditable(false);
 		welcomeText.setHorizontalAlignment(SwingConstants.CENTER);
 		welcomeText.setPreferredSize(new Dimension(500, 500));
 	}
