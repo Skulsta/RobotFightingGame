@@ -32,7 +32,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	private Player player;
 	private Player enemy;
 	private JPanel welcomePanel = new JPanel();
-	private boolean gameStarted;
+	private boolean gameStarted = false;
 
 	// For the console
 	public final static String newLine = "\n";
@@ -50,7 +50,9 @@ public class GameLayout extends JPanel implements ActionListener{
 	// For the menu bar
 	private JMenuBar menubar;
 	private JMenu menu;
-	private JMenuItem local;
+	
+	
+	private BorderLayout layout;
 
 
 	// For the real start screen
@@ -60,7 +62,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	public GameLayout () {
 
 		createMenuBar();
-		defineWelcomeElements();
+		// defineWelcomeElements();
 		createStartPanel();
 		createGUI();
 	}
@@ -68,7 +70,8 @@ public class GameLayout extends JPanel implements ActionListener{
 	// Adding two panels to the main panel
 	public void createGUI () {
 
-		setLayout (new BorderLayout());
+		layout = new BorderLayout();
+		setLayout (layout);
 
 		add (welcomeText, BorderLayout.CENTER);
 		// add(label, BorderLayout.NORTH);
@@ -100,7 +103,8 @@ public class GameLayout extends JPanel implements ActionListener{
 		welcomePanel.setMinimumSize(new Dimension(500, 500));
 		welcomePanel.setPreferredSize(new Dimension(500, 500));
 	}
-
+	
+	
 	public int getMove () {
 		int move = Integer.parseInt(input.getText());
 		if (move < 0 || move > player.getEnergy()) {
@@ -211,7 +215,9 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		actionBar();
 
-		swapPanel (welcomePanel, gamePanel);
+		swapPanel (gamePanel);
+		
+		input.requestFocus();
 	}
 
 	
@@ -236,8 +242,9 @@ public class GameLayout extends JPanel implements ActionListener{
 	 * Swaps only the components on the CENTER position of the main panel. The only other part of
 	 * the main panel is the console part at the EAST position, which should always be there.
 	 */
-	public void swapPanel (Component removed, Component added) {
-		remove(removed);
+	public void swapPanel (Component added) {
+
+		remove(layout.getLayoutComponent(BorderLayout.CENTER));
 		add (added, BorderLayout.CENTER);
 		revalidate();
 		repaint();
@@ -245,10 +252,10 @@ public class GameLayout extends JPanel implements ActionListener{
 	
 	// When the game is over. Simply remove the game panel and add a label saying "Game Over". Center it.
 	public void removeInputField() {
-		JLabel gameOver = new JLabel("Game Over. -->");
+		JLabel gameOver = new JLabel("Game Over");
 		gameOver.setHorizontalAlignment(SwingConstants.CENTER);
 		gameOver.setPreferredSize(new Dimension(500, 500));
-		swapPanel(gamePanel, gameOver);
+		swapPanel(gameOver);
 	}
 
 	// Used to create different informational messages on the gamePanel
@@ -262,14 +269,13 @@ public class GameLayout extends JPanel implements ActionListener{
 		gamePanel.add(arenaPanel);
 	}
 
-
-
 	// Creates the part for user input for the game screen.
 	public void actionBar() {
 
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new FlowLayout());
 
+		input = new JTextField();
 		input.setMaximumSize(new Dimension (50, 25));
 		input.setPreferredSize(new Dimension (50, 25));
 
@@ -278,6 +284,9 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		actionPanel.add(input);
 		actionPanel.add(submitMove);
+		
+		input.addActionListener(this);
+		input.requestFocus();
 
 		gamePanel.add(actionPanel);
 	}
@@ -288,25 +297,42 @@ public class GameLayout extends JPanel implements ActionListener{
 		menubar = new JMenuBar();
 		menu = new JMenu("Local");
 		menubar.add(menu);
-		local = new JMenuItem("New Game");
-		local.addActionListener(new ActionListener() {
+		JMenuItem newGame = new JMenuItem("New Game");
+		newGame.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				swapPanel(welcomeText, welcomePanel);
+				gameStarted = false;
+				gameMaster.resetGame();
+				welcomePanel.removeAll();
+				gamePanel.removeAll();
+				defineWelcomeElements();
+				swapPanel(welcomePanel);
 				input.requestFocus();
 			}
 		});
-		menu.add(local);
-		local = new JMenuItem("Load Game");
-		menu.add(local);
+		menu.add(newGame);
+		
+		JMenuItem saveGame = new JMenuItem("Save Game");
+		saveGame.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// swapPanel(gamePanel, welcomePanel);
+				gameMaster.saveGame();
+			}
+		});
+		menu.add(saveGame);
+		
+		JMenuItem loadGame = new JMenuItem("Load Game");
+		menu.add(loadGame);
 
 		menu = new JMenu("Online");
 		menubar.add(menu);
-		local = new JMenuItem("Host Game");
-		menu.add(local);
-		local = new JMenuItem("Join Game");
-		menu.add(local);
+		JMenuItem hostGame = new JMenuItem("Host Game");
+		menu.add(hostGame);
+		JMenuItem joinGame = new JMenuItem("Join Game");
+		menu.add(joinGame);
 
 		menubar.setVisible(true);
 

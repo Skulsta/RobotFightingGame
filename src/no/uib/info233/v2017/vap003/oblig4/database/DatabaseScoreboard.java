@@ -7,8 +7,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import GUI.ConsoleGUI;
+import no.uib.info233.v2017.vap003.oblig4.game.GameMaster;
+import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
 public class DatabaseScoreboard {
+	
+	private GameMaster gameMaster;
+	private Player player1;
+	private Player player2;
+	
+	public DatabaseScoreboard(GameMaster gameMaster) {
+		this.gameMaster = gameMaster;
+	}
 
 	public void updateDatabseRanking(String playerName, float playerScore) {
 		
@@ -16,7 +26,7 @@ public class DatabaseScoreboard {
 		// Using "try" so the connection closes itself.
 		try (
 				// Allocating a database "Connection" object.
-				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/Dina?useSSL=false",
+				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
 						"Dina", "d+W<YaB.QZ>\"6,q5");
 
 				// Allocating a database "Statement" object
@@ -72,21 +82,62 @@ public class DatabaseScoreboard {
 
 		try (
 				// Allocating a database "Connection" object.
-				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/Dina?useSSL=false",
+				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
 						"Dina", "d+W<YaB.QZ>\"6,q5");
 
 				Statement statementAfter = connect.createStatement();
 
 		) {
+			int highScore = 0;
 			String stringSelect = "select player, score from ranking order by score desc";
 			ResultSet resultsetAfter = statementAfter.executeQuery(stringSelect);
 			while (resultsetAfter.next()) {
+				if (highScore < 5) {
 				String updatedPlayer = resultsetAfter.getString("player");
 				float updatedScore = resultsetAfter.getFloat("score");
 				ConsoleGUI.sendToConsole(updatedPlayer + " - score: " + updatedScore);
+				highScore++;
+				}
 			}
 		}
 
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	
+	public void saveGame (GameMaster gameMaster) {
+		
+		this.gameMaster = gameMaster;
+		
+		player1 = gameMaster.getPlayer1();
+		player2 = gameMaster.getPlayer2();
+		
+		try (
+				// Allocating a database "Connection" object.
+				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
+						"Dina", "d+W<YaB.QZ>\"6,q5");
+
+				Statement saveStatement = connect.createStatement();
+				
+		) {
+			/** Close but no cigar
+			 * 
+			String stringSelect = "insert into saved_games values " + "('" + gameMaster.getGameid() + "', " + "'" +
+			player1.getName() + "', '" + player2.getName() + "', " + gameMaster.getPosition() + ", " +
+			player1.getEnergy() + ", " + player2.getEnergy() + ")";
+			saveStatement.executeUpdate(stringSelect);
+			*/
+			
+			String stringSelect = "insert into saved_games values " + "('" + gameMaster.getGameid() + "', " + "'" +
+			player1.getName() + "', '" + player2.getName() + "', " + gameMaster.getPosition() + ", " +
+			5 + ", " + 7 + ")";
+			saveStatement.executeUpdate(stringSelect);
+			
+			ConsoleGUI.sendToConsole("\nThe game has been saved with gameid: " + gameMaster.getGameid());
+		}
+		
 		catch (SQLException ex) {
 			ex.printStackTrace();
 		}

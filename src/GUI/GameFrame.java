@@ -12,7 +12,7 @@ public class GameFrame {
 		
 		frame.setJMenuBar(panel.getMenuBar());
 		frame.setContentPane(panel);
-		frame.setTitle("Danger Zone");
+		frame.setTitle("Supersonic Acrobatic Rocket-Powered Battle-Robots");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setLocationRelativeTo(null);

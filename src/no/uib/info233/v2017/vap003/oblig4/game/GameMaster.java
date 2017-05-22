@@ -1,6 +1,8 @@
 package no.uib.info233.v2017.vap003.oblig4.game;
+import java.util.Random;
+import java.util.UUID;
+
 import GUI.ConsoleGUI;
-import GUI.GameFrame;
 import GUI.GameLayout;
 import no.uib.info233.v2017.vap003.oblig4.database.DatabaseScoreboard;
 import no.uib.info233.v2017.vap003.oblig4.player.Player;
@@ -23,8 +25,6 @@ public class GameMaster {
 	// names for searching through the ranking table
 	private Player player1;
 	private Player player2;
-	
-	private ConsoleGUI console;
 
 	// Variable for storing the player's move in a round.
 	private Integer playerOneMove = null;
@@ -35,10 +35,16 @@ public class GameMaster {
 	// Keeps track of how many rounds the players has played in a game.
 	private int round = 1;
 
+	// The game id. Used by the database.
+	private String gameid;
+	
+	// Access the database.
+	DatabaseScoreboard database;
+
 
 	// Private constructor so that the class cannot be instantiated.
 	public GameMaster() {
-
+		this.database = new DatabaseScoreboard(this);
 	}
 
 
@@ -47,10 +53,12 @@ public class GameMaster {
 		this.player1 = player1;
 		this.player2 = player2;
 	}
-	
-	
+
+
 	public void setInterface(GameLayout gameLayout) {
 		this.gameLayout = gameLayout;
+		UUID id = new UUID(2, 8);
+		gameid = "" + id;
 	}
 
 
@@ -99,46 +107,46 @@ public class GameMaster {
 
 		// else {
 
-			System.out.println("Round: " + round);
-			ConsoleGUI.sendToConsole("\nRound: " + round);
-			round++;
+		System.out.println("Round: " + round);
+		ConsoleGUI.sendToConsole("\nRound: " + round);
+		round++;
 
-			// If player one used more energy than player two, player one takes one step forward, player two the opposite.
-			if (playerOneMove > playerTwoMove) {
-				position++;
-			}
+		// If player one used more energy than player two, player one takes one step forward, player two the opposite.
+		if (playerOneMove > playerTwoMove) {
+			position++;
+		}
 
-			// If player two used more energy than player one, player two takes one step forward, player two the opposite.
-			else if (playerOneMove < playerTwoMove) {
-				position--;
-			}
-
-
-			// The players' energy level is decreased by the amount they spent this round.
-			player1.setEnergy(player1.getEnergy() - playerOneMove);
-			player2.setEnergy(player2.getEnergy() - playerTwoMove);
+		// If player two used more energy than player one, player two takes one step forward, player two the opposite.
+		else if (playerOneMove < playerTwoMove) {
+			position--;
+		}
 
 
-			// Printing the new status of the game. Player position, energy spent and energy left.
-			System.out.println(player1.getName() + " - Energy used: " + playerOneMove +
-					" New position: " + position + " Energy left: " + player1.getEnergy());
-
-			System.out.println(player2.getName() + " - Energy used: " + playerTwoMove +
-					" New position: " + position + " Energy left: " + player2.getEnergy());	
+		// The players' energy level is decreased by the amount they spent this round.
+		player1.setEnergy(player1.getEnergy() - playerOneMove);
+		player2.setEnergy(player2.getEnergy() - playerTwoMove);
 
 
+		// Printing the new status of the game. Player position, energy spent and energy left.
+		System.out.println(player1.getName() + " - Energy used: " + playerOneMove +
+				" New position: " + position + " Energy left: " + player1.getEnergy());
 
-			ConsoleGUI.sendToConsole(player1.getName() + " - Energy used: " + playerOneMove +
-					" - New position: " + position + " Energy left: " + player1.getEnergy());
-			
-			ConsoleGUI.sendToConsole(player2.getName() + " - Energy used: " + playerTwoMove +
-					" - New position: " + position + " Energy left: " + player2.getEnergy());
-			
-			
-			// Updates the game layout with the new round and energy values.
-			gameLayout.updateGameScreen();
-			
-			
+		System.out.println(player2.getName() + " - Energy used: " + playerTwoMove +
+				" New position: " + position + " Energy left: " + player2.getEnergy());	
+
+
+
+		ConsoleGUI.sendToConsole(player1.getName() + " - Energy used: " + playerOneMove +
+				" - New position: " + position + " Energy left: " + player1.getEnergy());
+
+		ConsoleGUI.sendToConsole(player2.getName() + " - Energy used: " + playerTwoMove +
+				" - New position: " + position + " Energy left: " + player2.getEnergy());
+
+
+		// Updates the game layout with the new round and energy values.
+		gameLayout.updateGameScreen();
+
+
 
 
 		// PlayerMove is set to null so the listenToPlayerMove() method is ready to
@@ -147,7 +155,7 @@ public class GameMaster {
 		playerTwoMove = null;
 
 		// startGame is called to start a new round.
-		
+
 		//  if the game is over; both players are out of energy or a player has been defeated.
 		if ((position == -3 || position == 3)) {
 
@@ -173,89 +181,93 @@ public class GameMaster {
 	}	
 
 
-/** Update the player rankings in the ranking table. Stored in
- *  the remote mySQL database. Using the table "ranking" and columns
- *  "player" and "score"
- *  Calls a separate class that handles the database logic.
- */
-public void updateRanking() {
-
-	/**
-	System.out.println("---------");
-	System.out.println("Game over");
-	System.out.println("---------");
-
-	DatabaseScoreboard database = new DatabaseScoreboard();
-
-	System.out.println("Old Scoreboard: ");
-	database.displayScoreboard();
-	System.out.println();
-
-	database.updateDatabseRanking(player1.getName(), player1.getScore());
-	database.updateDatabseRanking(player2.getName(), player2.getScore());
-
-	System.out.println("The score is now: ");
-	database.displayScoreboard();
-	*/
-	
-	
-	
-	ConsoleGUI.sendToConsole("---------");
-	ConsoleGUI.sendToConsole("Game over");
-	ConsoleGUI.sendToConsole("---------");
-	
-	ConsoleGUI.sendToConsole(player1.getName() + " recieved: " + player1.getScore() + " points.");
-	ConsoleGUI.sendToConsole(player2.getName() + " recieved: " + player2.getScore() + " points. \n");
-
-	DatabaseScoreboard database = new DatabaseScoreboard();
-
-	ConsoleGUI.sendToConsole("Old Scoreboard: ");
-	database.displayScoreboard();
-	ConsoleGUI.sendToConsole("");
-
-	database.updateDatabseRanking(player1.getName(), player1.getScore());
-	database.updateDatabseRanking(player2.getName(), player2.getScore());
-
-	ConsoleGUI.sendToConsole("The score is now: ");
-	database.displayScoreboard();
-	
-	ConsoleGUI.sendToConsole("");
-	if (player1.getScore() > player2.getScore())
-		ConsoleGUI.sendToConsole(player1.getName() + " won!");
-	else if (player2.getScore() > player1.getScore())
-		ConsoleGUI.sendToConsole(player2.getName() + " won!");
-	else
-		ConsoleGUI.sendToConsole("It's a tie!");
-}
+	/** Update the player rankings in the ranking table. Stored in
+	 *  the remote mySQL database. Using the table "ranking" and columns
+	 *  "player" and "score"
+	 *  Calls a separate class that handles the database logic.
+	 */
+	public void updateRanking() {
 
 
-// Get method for player. Throws an exception if the player does not exist.
-public Player getPlayer(Player player) {
-	if (player1.equals(player)) {
+		ConsoleGUI.sendToConsole("---------");
+		ConsoleGUI.sendToConsole("Game over");
+		ConsoleGUI.sendToConsole("---------");
+
+		ConsoleGUI.sendToConsole(player1.getName() + " recieved: " + player1.getScore() + " points.");
+		ConsoleGUI.sendToConsole(player2.getName() + " recieved: " + player2.getScore() + " points. \n");
+
+		/**
+		ConsoleGUI.sendToConsole("Old Scoreboard: ");
+		database.displayScoreboard();
+		ConsoleGUI.sendToConsole("");
+		*/
+
+		database.updateDatabseRanking(player1.getName(), player1.getScore());
+		database.updateDatabseRanking(player2.getName(), player2.getScore());
+
+
+		ConsoleGUI.sendToConsole("Top players: ");
+		database.displayScoreboard();
+
+		ConsoleGUI.sendToConsole("");
+		if (player1.getScore() > player2.getScore())
+			ConsoleGUI.sendToConsole(player1.getName() + " won!");
+		else if (player2.getScore() > player1.getScore())
+			ConsoleGUI.sendToConsole(player2.getName() + " won!");
+		else
+			ConsoleGUI.sendToConsole("It's a tie!");
+	}
+
+	// Save the game by saving the current state of the game to a database.
+	public void saveGame() {
+		database.saveGame(this);
+	}
+
+
+	// Get method for player. Throws an exception if the player does not exist.
+	public Player getPlayer(Player player) {
+		if (player1.equals(player)) {
+			return player1;
+		} else if (player2.equals(player)) {
+			return player2;
+		}
+		else throw new IllegalArgumentException("Not a valid input");
+	}
+
+
+	public Player getPlayer1 () {
 		return player1;
-	} else if (player2.equals(player)) {
+	}
+
+
+
+	public Player getPlayer2 () {
 		return player2;
 	}
-	else throw new IllegalArgumentException("Not a valid input");
-}
+	
+	
+	// Used by GameLayout if the player chooses to play more than one game in a row.
+	public void setPlayer2 (Player player) {
+		this.player2 = player;
+	}
 
 
-public Player getPlayer1 () {
-	return player1;
-}
+	public int getPosition() {
+		return position;
+	}
 
-
-
-public Player getPlayer2 () {
-	return player2;
-}
-
-
-public int getPosition() {
-	return position;
-}
-
-public int getRound() {
-	return round;
-}
+	public int getRound() {
+		return round;
+	}
+	
+	public String getGameid() {
+		return gameid;
+	}
+	
+	public void resetGame() {
+		player1 = null;
+		player2 = null;
+		round = 1;
+		position = 0;
+	}
 }
