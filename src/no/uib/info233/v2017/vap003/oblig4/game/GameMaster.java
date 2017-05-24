@@ -49,6 +49,8 @@ public class GameMaster {
 	public GameMaster() {
 		this.database = new DatabaseScoreboard(this);
 	}
+	
+	
 
 
 	// Assign the players that are going to fight each other
@@ -198,12 +200,6 @@ public class GameMaster {
 		ConsoleGUI.sendToConsole(player1.getName() + " recieved: " + player1.getScore() + " points.");
 		ConsoleGUI.sendToConsole(player2.getName() + " recieved: " + player2.getScore() + " points. \n");
 
-		/**
-		ConsoleGUI.sendToConsole("Old Scoreboard: ");
-		database.displayScoreboard();
-		ConsoleGUI.sendToConsole("");
-		*/
-
 		database.updateDatabseRanking(player1.getName(), player1.getScore());
 		database.updateDatabseRanking(player2.getName(), player2.getScore());
 
@@ -240,10 +236,12 @@ public class GameMaster {
 		this.player1 = new Player(player1, playerOneEnergy);
 		this.player2 = new Player(player2, playerTwoEnergy);
 		this.position = position;
+		this.round = 1;
 		
 		ConsoleGUI.sendToConsole("\n------------------------\nYou selected a game with gameid: " + gameid +
 				"\n" + player1 + " vs " + player2 + " - Position: " + position +
-				"\nYou are " + player1 + ". Get your opponent to position 3");
+				"\nGet your opponent to position 3");
+		gameLayout.showLoadedGame();
 	}
 	
 	
@@ -257,7 +255,9 @@ public class GameMaster {
 		} else if (player2.equals(player)) {
 			return player2;
 		}
-		else throw new IllegalArgumentException("Not a valid input");
+		else player = null;
+		
+		return player;
 	}
 
 
@@ -265,18 +265,9 @@ public class GameMaster {
 		return player1;
 	}
 
-
-
 	public Player getPlayer2 () {
 		return player2;
 	}
-	
-	
-	// Used by GameLayout if the player chooses to play more than one game in a row.
-	public void setPlayer2 (Player player) {
-		this.player2 = player;
-	}
-
 
 	public int getPosition() {
 		return position;

@@ -124,49 +124,63 @@ public class GameLayout extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!gameStarted) {
-			player = new HumanPlayer (input.getText());
-
-			// Temp
-			Player player2 = new Player("Bill");
-			gameMaster.setPlayers(null, player2);
-			player2.registerGameMaster(gameMaster);
-			gameMaster.setInterface(this);
-
-			input.setText("");
-			ConsoleGUI.sendToConsole("Player " + player.getName() + " is added to the game." + newLine);
-			if (gameMaster.getPlayer2() == null) {
-				gameMaster.setPlayers(player, null);
-				ConsoleGUI.sendToConsole("You are player1. Waiting for player 2...");
-			}
-			else if (gameMaster.getPlayer1() == null) {
-				gameMaster.setPlayers(player, gameMaster.getPlayer2());
-				enemy = player2;
-				ConsoleGUI.sendToConsole("Welcome " + player.getName() + "! \n" + "You are player 1. You're fighting against " +
-						enemy.getName() + newLine + "Get your opponent to arena '3' to win." + newLine +
-						"If you get pushed back to arena -3, you lose." + newLine);
-			}
-			else ConsoleGUI.sendToConsole("ERROR: Both spots are somehow taken");
-
-			player.registerGameMaster(gameMaster);
-			createGameScreen();
-			gameStarted = true;
+			createNewPlayer();
 		}
 		
 		else {
-			try {
-				int move = Integer.parseInt(input.getText());
-				if (move >= 0 || move <= player.getEnergy()) {
-					enemy.makeNextMove(gameMaster.getPosition(), enemy.getEnergy(), player.getEnergy());
-					gameMaster.listenToPlayerMove(player, getMove());
-				}
-				else {
-					throw new NumberFormatException();
-				}
+			makeNextMove();
+		}
+	}
+	
+	public void createNewPlayer() {
+		
+		if (player == null)
+			player = new HumanPlayer (input.getText());
+
+		// Temp
+		if (gameMaster.getPlayer2() != null)
+			enemy = gameMaster.getPlayer2();
+		else
+			enemy = new Player("CPU");
+			
+		gameMaster.setPlayers(null, enemy);
+		enemy.registerGameMaster(gameMaster);
+		gameMaster.setInterface(this);
+
+		input.setText("");
+		ConsoleGUI.sendToConsole("Player " + player.getName() + " is added to the game." + newLine);
+		if (gameMaster.getPlayer2() == null) {
+			gameMaster.setPlayers(player, null);
+			ConsoleGUI.sendToConsole("You are player1. Waiting for player 2...");
+		}
+		else if (gameMaster.getPlayer1() == null) {
+			gameMaster.setPlayers(player, enemy);
+			ConsoleGUI.sendToConsole("Welcome " + player.getName() + "! \n" + "You are player 1. You're fighting against " +
+					enemy.getName() + newLine + "Get your opponent to arena '3' to win." + newLine +
+					"If you get pushed back to arena -3, you lose." + newLine);
+		}
+		else ConsoleGUI.sendToConsole("ERROR: Both spots are somehow taken");
+
+		player.registerGameMaster(gameMaster);
+		createGameScreen();
+		gameStarted = true;
+	}
+	
+	
+	public void makeNextMove() {
+		try {
+			int move = Integer.parseInt(input.getText());
+			if (move >= 0 || move <= player.getEnergy()) {
+				enemy.makeNextMove(gameMaster.getPosition(), enemy.getEnergy(), player.getEnergy());
+				gameMaster.listenToPlayerMove(player, getMove());
 			}
-			catch (NumberFormatException f) {
-				input.setText("");
-				ConsoleGUI.sendToConsole("Enter a valid number.");
+			else {
+				throw new NumberFormatException();
 			}
+		}
+		catch (NumberFormatException f) {
+			input.setText("");
+			ConsoleGUI.sendToConsole("Enter a valid number.");
 		}
 	}
 
@@ -197,7 +211,6 @@ public class GameLayout extends JPanel implements ActionListener{
 		yourEnergy.setOpaque(true);
 		// yourEnergy.setBackground(Color.BLUE);
 
-		// TODO Make sure this is actually opponent energy level
 		opponentEnergy = new JLabel (" - Opponent's energy: " + String.valueOf(enemy.getEnergy()));
 		yourEnergy.setOpaque(true);
 		// yourEnergy.setBackground(Color.BLUE);
@@ -231,7 +244,6 @@ public class GameLayout extends JPanel implements ActionListener{
 		gamePanel.revalidate();
 		gamePanel.repaint();
 		input.requestFocus();
-
 	}
 
 
@@ -243,7 +255,6 @@ public class GameLayout extends JPanel implements ActionListener{
 	 * the main panel is the console part at the EAST position, which should always be there.
 	 */
 	public void swapPanel (Component added) {
-
 		remove(layout.getLayoutComponent(BorderLayout.CENTER));
 		add (added, BorderLayout.CENTER);
 		revalidate();
@@ -422,5 +433,21 @@ public class GameLayout extends JPanel implements ActionListener{
 	// Used for Game_ID in database... maybe.
 	public long getSerialNumber() {
 		return serialVersionUID;
+	}
+	
+	
+	public void showLoadedGame() {
+		if (gameMaster.getPlayer1() == null)
+			ConsoleGUI.sendToConsole("Something went wrong. Can't find player 1.");
+		else {
+			player = gameMaster.getPlayer1();
+		createNewPlayer();
+		if (gameStarted) {
+			updateGameScreen();
+			swapPanel(gamePanel);
+		}
+		else
+			createGameScreen();
+		}
 	}
 }
