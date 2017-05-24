@@ -383,9 +383,19 @@ public class GameLayout extends JPanel implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				// swapPanel(gamePanel, welcomePanel);
 				gameMaster.loadGame(loadField.getText());
+				loadField.setText("");
 			}
 		});
-		loadField.addActionListener(this);
+		
+		loadField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// swapPanel(gamePanel, welcomePanel);
+				gameMaster.loadGame(loadField.getText());
+				loadField.setText("");
+			}
+		});	// Repeating the same code. Not good.
 		
 		textfieldPanel.add(loadButton);
 		

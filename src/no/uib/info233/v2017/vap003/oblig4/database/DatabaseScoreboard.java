@@ -146,6 +146,7 @@ public class DatabaseScoreboard {
 				Statement listStatement = connect.createStatement();
 
 				) {
+			boolean gameFound = false;
 			String stringSelect = "select * from saved_games";
 			ResultSet resultsetAfter = listStatement.executeQuery(stringSelect);
 			while (resultsetAfter.next()) {
@@ -156,13 +157,12 @@ public class DatabaseScoreboard {
 				Integer playerOneEnergy = resultsetAfter.getInt("player_1_energy");
 				Integer playerTwoEnergy = resultsetAfter.getInt("player_2_energy");
 				if (gameid.equals(loadedGameid)) {
-					ConsoleGUI.sendToConsole("\n------------------------\nYou selected a game with gameid: " + gameid +
-							"\n" + player1 + " vs " + player2 + " - Position: " + position +
-							"\nYou are " + player2 + ". Get your opponent to position -3");
-					
+					gameFound = true;
 					gameMaster.getLoadedGame(loadedGameid, player1, player2, position, playerOneEnergy, playerTwoEnergy);
 				}
 			}
+			if (!gameFound)
+				ConsoleGUI.sendToConsole("The game id was not found. Please try again.");
 		}
 
 		catch (SQLException ex) {

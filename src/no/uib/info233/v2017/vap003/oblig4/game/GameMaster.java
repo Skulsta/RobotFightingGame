@@ -240,6 +240,10 @@ public class GameMaster {
 		this.player1 = new Player(player1, playerOneEnergy);
 		this.player2 = new Player(player2, playerTwoEnergy);
 		this.position = position;
+		
+		ConsoleGUI.sendToConsole("\n------------------------\nYou selected a game with gameid: " + gameid +
+				"\n" + player1 + " vs " + player2 + " - Position: " + position +
+				"\nYou are " + player2 + ". Get your opponent to position -3");
 	}
 	
 	
