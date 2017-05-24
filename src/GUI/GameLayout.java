@@ -15,7 +15,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import no.uib.info233.v2017.vap003.oblig4.game.GameMaster;
@@ -62,6 +61,13 @@ public class GameLayout extends JPanel implements ActionListener{
 
 	public GameLayout () {
 
+		input.setMaximumSize(new Dimension (200, 25));
+		input.addActionListener(this);
+
+		submit.setAlignmentX(CENTER_ALIGNMENT);
+		submit.addActionListener(this);
+		submit.setAlignmentY(CENTER_ALIGNMENT);
+		
 		createMenuBar();
 		// defineWelcomeElements();
 		createStartPanel();
@@ -75,7 +81,6 @@ public class GameLayout extends JPanel implements ActionListener{
 		setLayout (layout);
 
 		add (welcomeText, BorderLayout.CENTER);
-		// add(label, BorderLayout.NORTH);
 		add(console, BorderLayout.EAST);
 
 	}
@@ -86,13 +91,6 @@ public class GameLayout extends JPanel implements ActionListener{
 	public void defineWelcomeElements() {
 
 		welcome.setAlignmentX(CENTER_ALIGNMENT);
-
-		input.setMaximumSize(new Dimension (200, 25));
-		input.addActionListener(this);
-
-		submit.setAlignmentX(CENTER_ALIGNMENT);
-		submit.addActionListener(this);
-		submit.setAlignmentY(CENTER_ALIGNMENT);
 
 
 		welcomePanel.setLayout(new BoxLayout(welcomePanel, BoxLayout.Y_AXIS));
@@ -129,23 +127,23 @@ public class GameLayout extends JPanel implements ActionListener{
 			player = new HumanPlayer (input.getText());
 
 			// Temp
-			Player player1 = new Player("Bill");
-			gameMaster.setPlayers(player1, null);
-			player1.registerGameMaster(gameMaster);
+			Player player2 = new Player("Bill");
+			gameMaster.setPlayers(null, player2);
+			player2.registerGameMaster(gameMaster);
 			gameMaster.setInterface(this);
 
 			input.setText("");
 			ConsoleGUI.sendToConsole("Player " + player.getName() + " is added to the game." + newLine);
-			if (gameMaster.getPlayer1() == null) {
+			if (gameMaster.getPlayer2() == null) {
 				gameMaster.setPlayers(player, null);
 				ConsoleGUI.sendToConsole("You are player1. Waiting for player 2...");
 			}
-			else if (gameMaster.getPlayer2() == null) {
-				gameMaster.setPlayers(gameMaster.getPlayer1(), player);
-				enemy = player1;
-				ConsoleGUI.sendToConsole("Welcome " + player.getName() + "! \n" + "You are player 2. You're fighting against " +
-						enemy.getName() + newLine + "Get your opponent to arena '-3' to win." + newLine +
-						"If you get pushed back to arena 3, you lose." + newLine);
+			else if (gameMaster.getPlayer1() == null) {
+				gameMaster.setPlayers(player, gameMaster.getPlayer2());
+				enemy = player2;
+				ConsoleGUI.sendToConsole("Welcome " + player.getName() + "! \n" + "You are player 1. You're fighting against " +
+						enemy.getName() + newLine + "Get your opponent to arena '3' to win." + newLine +
+						"If you get pushed back to arena -3, you lose." + newLine);
 			}
 			else ConsoleGUI.sendToConsole("ERROR: Both spots are somehow taken");
 
@@ -153,6 +151,7 @@ public class GameLayout extends JPanel implements ActionListener{
 			createGameScreen();
 			gameStarted = true;
 		}
+		
 		else {
 			try {
 				int move = Integer.parseInt(input.getText());
@@ -369,7 +368,6 @@ public class GameLayout extends JPanel implements ActionListener{
 		loadField.setPreferredSize(textDimension);
 		loadField.setMinimumSize(textDimension);
 		loadField.setMaximumSize(textDimension);
-		loadField.setHorizontalAlignment(JTextField.CENTER);
 		
 		JPanel textfieldPanel = new JPanel();
 		textfieldPanel.add(loadInstructions);
@@ -395,7 +393,7 @@ public class GameLayout extends JPanel implements ActionListener{
 				gameMaster.loadGame(loadField.getText());
 				loadField.setText("");
 			}
-		});	// Repeating the same code. Not good.
+		});	// Repeating the same code twice. Not good.
 		
 		textfieldPanel.add(loadButton);
 		
@@ -405,6 +403,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		return loadPanel;
 		}
+	
 
 
 	// Get method. Needed to add the menu to the Frame. Used in the GameFrame method.

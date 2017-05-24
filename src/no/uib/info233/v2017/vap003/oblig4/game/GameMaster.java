@@ -243,7 +243,7 @@ public class GameMaster {
 		
 		ConsoleGUI.sendToConsole("\n------------------------\nYou selected a game with gameid: " + gameid +
 				"\n" + player1 + " vs " + player2 + " - Position: " + position +
-				"\nYou are " + player2 + ". Get your opponent to position -3");
+				"\nYou are " + player1 + ". Get your opponent to position 3");
 	}
 	
 	
