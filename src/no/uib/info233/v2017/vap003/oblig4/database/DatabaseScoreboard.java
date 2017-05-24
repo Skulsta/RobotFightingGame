@@ -143,14 +143,26 @@ public class DatabaseScoreboard {
 				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
 						"Dina", "d+W<YaB.QZ>\"6,q5");
 
-				Statement loadStatement = connect.createStatement();
+				Statement listStatement = connect.createStatement();
 
 				) {
-			String stringSelect = "select * from saved_games where gameid = '" + gameid + "'";
-			ResultSet resultset = loadStatement.executeQuery(stringSelect);
-			String loadedGameid = resultset.getString("game_id");
-			ConsoleGUI.sendToConsole("The game is loaded with gameid: " + loadedGameid);
-
+			String stringSelect = "select * from saved_games";
+			ResultSet resultsetAfter = listStatement.executeQuery(stringSelect);
+			while (resultsetAfter.next()) {
+				String loadedGameid = resultsetAfter.getString("game_id");
+				String player1 = resultsetAfter.getString("player_1");
+				String player2 = resultsetAfter.getString("player_2");
+				Integer position = resultsetAfter.getInt("game_position");
+				Integer playerOneEnergy = resultsetAfter.getInt("player_1_energy");
+				Integer playerTwoEnergy = resultsetAfter.getInt("player_2_energy");
+				if (gameid.equals(loadedGameid)) {
+					ConsoleGUI.sendToConsole("\n------------------------\nYou selected a game with gameid: " + gameid +
+							"\n" + player1 + " vs " + player2 + " - Position: " + position +
+							"\nYou are " + player2 + ". Get your opponent to position -3");
+					
+					gameMaster.getLoadedGame(loadedGameid, player1, player2, position, playerOneEnergy, playerTwoEnergy);
+				}
+			}
 		}
 
 		catch (SQLException ex) {

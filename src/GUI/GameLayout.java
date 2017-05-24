@@ -15,6 +15,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import no.uib.info233.v2017.vap003.oblig4.game.GameMaster;
@@ -331,6 +332,8 @@ public class GameLayout extends JPanel implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				// swapPanel(gamePanel, welcomePanel);
 				gameMaster.listSavedGames();
+				
+				swapPanel(loadField());
 			}
 		});
 		menu.add(loadGame);
@@ -345,6 +348,54 @@ public class GameLayout extends JPanel implements ActionListener{
 		menubar.setVisible(true);
 
 	}
+	
+	public JPanel loadField() {
+		JPanel loadPanel = new JPanel();
+		loadPanel.setLayout(new BorderLayout());
+		loadPanel.setPreferredSize(new Dimension(500, 500));
+		
+		JPanel inputPanel = new JPanel();
+		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+		
+		
+		JLabel loadInstructions = new JLabel("Copy your gameid from the console and paste it here");
+		loadInstructions.setPreferredSize(new Dimension(500, 200));
+		loadInstructions.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		
+		// Create an input text field.
+		Dimension textDimension = new Dimension(200, 25);
+		JTextField loadField = new JTextField(20);
+		loadField.setPreferredSize(textDimension);
+		loadField.setMinimumSize(textDimension);
+		loadField.setMaximumSize(textDimension);
+		loadField.setHorizontalAlignment(JTextField.CENTER);
+		
+		JPanel textfieldPanel = new JPanel();
+		textfieldPanel.add(loadInstructions);
+		textfieldPanel.add(loadField);
+
+		JButton loadButton = new JButton ("Submit");
+		loadButton.setAlignmentX(CENTER_ALIGNMENT);
+		loadButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// swapPanel(gamePanel, welcomePanel);
+				gameMaster.loadGame(loadField.getText());
+			}
+		});
+		loadField.addActionListener(this);
+		
+		textfieldPanel.add(loadButton);
+		
+		inputPanel.add(textfieldPanel);
+		
+		loadPanel.add(inputPanel,  BorderLayout.CENTER);
+
+		return loadPanel;
+		}
+
 
 	// Get method. Needed to add the menu to the Frame. Used in the GameFrame method.
 	public JMenuBar getMenuBar() {

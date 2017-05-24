@@ -227,9 +227,23 @@ public class GameMaster {
 	
 	
 	// Load a game by giving a gameid as input.
-	public void loadGame() {
-		database.loadGame(gameid);
-	}// TODO fix.
+	public void loadGame(String enteredGameid) {
+		database.loadGame(enteredGameid);
+	}
+	
+	
+	// Assign the values from the database to the gameMaster
+	public void getLoadedGame(String gameid, String player1, String player2, Integer position,
+			Integer playerOneEnergy, Integer playerTwoEnergy) {
+		
+		this.gameid = gameid;
+		this.player1 = new Player(player1, playerOneEnergy);
+		this.player2 = new Player(player2, playerTwoEnergy);
+		this.position = position;
+	}
+	
+	
+
 
 
 	// Get method for player. Throws an exception if the player does not exist.
