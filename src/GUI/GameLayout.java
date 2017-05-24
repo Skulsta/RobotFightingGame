@@ -325,6 +325,14 @@ public class GameLayout extends JPanel implements ActionListener{
 		menu.add(saveGame);
 		
 		JMenuItem loadGame = new JMenuItem("Load Game");
+		loadGame.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// swapPanel(gamePanel, welcomePanel);
+				gameMaster.listSavedGames();
+			}
+		});
 		menu.add(loadGame);
 
 		menu = new JMenu("Online");

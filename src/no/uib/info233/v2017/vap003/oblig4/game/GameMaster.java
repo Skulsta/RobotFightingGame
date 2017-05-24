@@ -1,4 +1,6 @@
 package no.uib.info233.v2017.vap003.oblig4.game;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.UUID;
 
@@ -36,6 +38,7 @@ public class GameMaster {
 	private int round = 1;
 
 	// The game id. Used by the database.
+	private SecureRandom random = new SecureRandom();
 	private String gameid;
 	
 	// Access the database.
@@ -57,8 +60,7 @@ public class GameMaster {
 
 	public void setInterface(GameLayout gameLayout) {
 		this.gameLayout = gameLayout;
-		UUID id = new UUID(2, 8);
-		gameid = "" + id;
+		gameid = new BigInteger(130, random).toString(32);
 	}
 
 
@@ -222,6 +224,12 @@ public class GameMaster {
 	public void saveGame() {
 		database.saveGame(this);
 	}
+	
+	
+	// Load a game by giving a gameid as input.
+	public void loadGame() {
+		database.loadGame(gameid);
+	}// TODO fix.
 
 
 	// Get method for player. Throws an exception if the player does not exist.
@@ -269,5 +277,9 @@ public class GameMaster {
 		player2 = null;
 		round = 1;
 		position = 0;
+	}
+	
+	public void listSavedGames() {
+		database.listSavedGames();
 	}
 }
