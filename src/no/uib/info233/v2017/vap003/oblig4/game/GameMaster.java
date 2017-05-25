@@ -241,7 +241,7 @@ public class GameMaster {
 				"\n" + player1 + " vs " + player2 + " - Position: " + position +
 				"\nGet your opponent to position 3");
 		
-		gameLayout.showLoadedGame();
+		gameLayout.createNewPlayer();
 	}
 	
 	
@@ -250,7 +250,9 @@ public class GameMaster {
 	}
 	
 	public void loadOpenGame (String enteredPlayer1id) {
-		database.loadOpenGame(enteredPlayer1id);
+		if (database.loadOpenGame(enteredPlayer1id)) {
+			
+		}
 	}
 	
 	

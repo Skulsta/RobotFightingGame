@@ -222,7 +222,10 @@ public class DatabaseScoreboard {
 	}
 	
 	
-	public void loadOpenGame(String playerId) {
+	public boolean loadOpenGame(String playerId) {
+		
+		boolean validGame = false;
+		
 		try (
 				// Allocating a database "Connection" object.
 				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
@@ -231,7 +234,6 @@ public class DatabaseScoreboard {
 				Statement listStatement = connect.createStatement();
 
 				) {
-			boolean gameFound = false;
 			String stringSelect = "select * from open_games";
 			ResultSet resultsetAfter = listStatement.executeQuery(stringSelect);
 			while (resultsetAfter.next()) {
@@ -241,16 +243,19 @@ public class DatabaseScoreboard {
 				String player2id = resultsetAfter.getString("player_2_random");
 				ConsoleGUI.sendToConsole(player1 + " - player id: " + player1id);
 				if (player1id.equals(playerId)) {
-					gameFound = true;
-					gameMaster.loadOpenGame(player1);
+					if (player2 != null) {
+						validGame = true;
+						ConsoleGUI.sendToConsole("The game is available");
+					}
+					else
+						ConsoleGUI.sendToConsole("Game no longer avaiable.");
 				}
 			}
-			if (!gameFound)
-				ConsoleGUI.sendToConsole("The game id was not found. Please try again.");
 		}
 
 		catch (SQLException ex) {
 			ex.printStackTrace();
 		}
+		return validGame;
 	}
 }

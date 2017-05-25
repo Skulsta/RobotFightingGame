@@ -1,5 +1,7 @@
 package no.uib.info233.v2017.vap003.oblig4.player;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import no.uib.info233.v2017.vap003.oblig4.game.GameMaster;
@@ -11,6 +13,9 @@ public class Player {
 	private int energy = 10;
 	private GameMaster gameMaster;
 	
+	// Added to integrate multiplayer functionalities.
+	private String playerRandom;
+	
 	/**
 	 * A constructor that creates a player with the specified name.
 	 * The robot gets a default energy level of 10.
@@ -18,6 +23,9 @@ public class Player {
 	 */
 	public Player (String name) {
 		this.name = name;
+		
+		SecureRandom random = new SecureRandom();
+		playerRandom = new BigInteger(25, random).toString(32);
 	}
 	
 	/** This constructor takes in both name and energy level as parameters.
@@ -27,6 +35,9 @@ public class Player {
 	public Player (String name, int energy) {
 		this.name = name;
 		this.energy = energy;
+		
+		SecureRandom random = new SecureRandom();
+		playerRandom = new BigInteger(25, random).toString(32);
 	}
 	
 	
@@ -111,5 +122,9 @@ public class Player {
 	
 	public GameMaster getGameMaster() {
 		return gameMaster;
+	}
+	
+	public String getPlayerRandom() {
+		return playerRandom;
 	}
 }
