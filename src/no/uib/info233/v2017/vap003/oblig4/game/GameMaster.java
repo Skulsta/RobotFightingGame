@@ -1,12 +1,11 @@
 package no.uib.info233.v2017.vap003.oblig4.game;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Random;
-import java.util.UUID;
 
 import GUI.ConsoleGUI;
 import GUI.GameLayout;
 import no.uib.info233.v2017.vap003.oblig4.database.DatabaseScoreboard;
+import no.uib.info233.v2017.vap003.oblig4.player.HumanPlayer;
 import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
 /** The game arena is divided into 7 circles. The circle in the middle is number 2.
@@ -229,11 +228,11 @@ public class GameMaster {
 	
 	
 	// Assign the values from the database to the gameMaster
-	public void getLoadedGame(String gameid, String player1, String player2, Integer position,
-			Integer playerOneEnergy, Integer playerTwoEnergy) {
+	public void getLoadedGame(String gameid, String player1, String player2, int position,
+			int playerOneEnergy, int playerTwoEnergy) {
 		
 		this.gameid = gameid;
-		this.player1 = new Player(player1, playerOneEnergy);
+		this.player1 = new HumanPlayer(player1, playerOneEnergy);
 		this.player2 = new Player(player2, playerTwoEnergy);
 		this.position = position;
 		this.round = 1;
@@ -241,6 +240,7 @@ public class GameMaster {
 		ConsoleGUI.sendToConsole("\n------------------------\nYou selected a game with gameid: " + gameid +
 				"\n" + player1 + " vs " + player2 + " - Position: " + position +
 				"\nGet your opponent to position 3");
+		
 		gameLayout.showLoadedGame();
 	}
 	

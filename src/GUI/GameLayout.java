@@ -61,6 +61,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 	public GameLayout () {
 
+		gameMaster.setInterface(this);
 		input.setMaximumSize(new Dimension (200, 25));
 		input.addActionListener(this);
 
@@ -134,36 +135,29 @@ public class GameLayout extends JPanel implements ActionListener{
 	
 	public void createNewPlayer() {
 		
-		if (player == null)
+		// Assign player 1.
+		if (gameMaster.getPlayer1() != null)
+			player = gameMaster.getPlayer1();
+		else
 			player = new HumanPlayer (input.getText());
+		ConsoleGUI.sendToConsole("\nPlayer " + player.getName() + " is added to the game.");
 
-		// Temp
+		// Assign player 2.
 		if (gameMaster.getPlayer2() != null)
 			enemy = gameMaster.getPlayer2();
 		else
 			enemy = new Player("CPU");
-			
-		gameMaster.setPlayers(null, enemy);
-		enemy.registerGameMaster(gameMaster);
-		gameMaster.setInterface(this);
-
-		input.setText("");
-		ConsoleGUI.sendToConsole("Player " + player.getName() + " is added to the game." + newLine);
-		if (gameMaster.getPlayer2() == null) {
-			gameMaster.setPlayers(player, null);
-			ConsoleGUI.sendToConsole("You are player1. Waiting for player 2...");
-		}
-		else if (gameMaster.getPlayer1() == null) {
-			gameMaster.setPlayers(player, enemy);
-			ConsoleGUI.sendToConsole("Welcome " + player.getName() + "! \n" + "You are player 1. You're fighting against " +
-					enemy.getName() + newLine + "Get your opponent to arena '3' to win." + newLine +
-					"If you get pushed back to arena -3, you lose." + newLine);
-		}
-		else ConsoleGUI.sendToConsole("ERROR: Both spots are somehow taken");
-
+		ConsoleGUI.sendToConsole("Player " + enemy.getName() + " is added to the game." + newLine);
+		
+		// The formalities..
+		gameMaster.setPlayers(player, enemy);
 		player.registerGameMaster(gameMaster);
-		createGameScreen();
+		enemy.registerGameMaster(gameMaster);
+		
+		input.setText("");
+
 		gameStarted = true;
+		createGameScreen();
 	}
 	
 	
@@ -209,11 +203,9 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		yourEnergy = new JLabel ("Your energy: " + String.valueOf(player.getEnergy()) + " - ");
 		yourEnergy.setOpaque(true);
-		// yourEnergy.setBackground(Color.BLUE);
 
 		opponentEnergy = new JLabel (" - Opponent's energy: " + String.valueOf(enemy.getEnergy()));
 		yourEnergy.setOpaque(true);
-		// yourEnergy.setBackground(Color.BLUE);
 
 		topPanel.add(yourEnergy);
 		topPanel.add(roundMessage);
@@ -243,7 +235,6 @@ public class GameLayout extends JPanel implements ActionListener{
 		createGameScreen();
 		gamePanel.revalidate();
 		gamePanel.repaint();
-		input.requestFocus();
 	}
 
 
@@ -437,17 +428,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	
 	
 	public void showLoadedGame() {
-		if (gameMaster.getPlayer1() == null)
-			ConsoleGUI.sendToConsole("Something went wrong. Can't find player 1.");
-		else {
-			player = gameMaster.getPlayer1();
+		gamePanel.removeAll();
 		createNewPlayer();
-		if (gameStarted) {
-			updateGameScreen();
-			swapPanel(gamePanel);
-		}
-		else
-			createGameScreen();
-		}
 	}
 }

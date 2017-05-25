@@ -108,11 +108,10 @@ public class DatabaseScoreboard {
 
 
 	public void saveGame (GameMaster gameMaster) {
-
-		this.gameMaster = gameMaster;
-
+		
 		player1 = gameMaster.getPlayer1();
 		player2 = gameMaster.getPlayer2();
+		
 
 		try (
 				// Allocating a database "Connection" object.
@@ -125,7 +124,7 @@ public class DatabaseScoreboard {
 
 			String stringSelect = "insert into saved_games values " + "('" + gameMaster.getGameid() + "', " + "'" +
 					player1.getName() + "', '" + player2.getName() + "', " + gameMaster.getPosition() + ", " +
-					5 + ", " + 7 + ")";
+					player1.getEnergy() + ", " + player2.getEnergy() + ")";
 			saveStatement.executeUpdate(stringSelect);
 
 			ConsoleGUI.sendToConsole("\nThe game has been saved with gameid: " + gameMaster.getGameid());
@@ -153,9 +152,9 @@ public class DatabaseScoreboard {
 				String loadedGameid = resultsetAfter.getString("game_id");
 				String player1 = resultsetAfter.getString("player_1");
 				String player2 = resultsetAfter.getString("player_2");
-				Integer position = resultsetAfter.getInt("game_position");
-				Integer playerOneEnergy = resultsetAfter.getInt("player_1_energy");
-				Integer playerTwoEnergy = resultsetAfter.getInt("player_2_energy");
+				int position = resultsetAfter.getInt("game_position");
+				int playerOneEnergy = resultsetAfter.getInt("player_1_energy");
+				int playerTwoEnergy = resultsetAfter.getInt("player_2_energy");
 				if (gameid.equals(loadedGameid)) {
 					gameFound = true;
 					gameMaster.getLoadedGame(loadedGameid, player1, player2, position, playerOneEnergy, playerTwoEnergy);
