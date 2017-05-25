@@ -52,6 +52,11 @@ public class GameLayout extends JPanel implements ActionListener{
 	private JMenu menu;
 	
 	
+	// For loading game, could have reused "input" and "submit"
+	private JTextField loadField;
+	private JButton loadButton;
+	
+	
 	private BorderLayout layout;
 
 
@@ -331,10 +336,9 @@ public class GameLayout extends JPanel implements ActionListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// swapPanel(gamePanel, welcomePanel);
 				gameMaster.listSavedGames();
-				
 				swapPanel(loadField());
+				loadGameScreen();
 			}
 		});
 		menu.add(loadGame);
@@ -344,6 +348,15 @@ public class GameLayout extends JPanel implements ActionListener{
 		JMenuItem hostGame = new JMenuItem("Host Game");
 		menu.add(hostGame);
 		JMenuItem joinGame = new JMenuItem("Join Game");
+		joinGame.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameMaster.listOpenGames();
+				swapPanel(loadField());
+				// loadGameScreen();
+			}
+		});
 		menu.add(joinGame);
 
 		menubar.setVisible(true);
@@ -366,7 +379,7 @@ public class GameLayout extends JPanel implements ActionListener{
 		
 		// Create an input text field.
 		Dimension textDimension = new Dimension(200, 25);
-		JTextField loadField = new JTextField(20);
+		loadField = new JTextField(20);
 		loadField.setPreferredSize(textDimension);
 		loadField.setMinimumSize(textDimension);
 		loadField.setMaximumSize(textDimension);
@@ -375,27 +388,8 @@ public class GameLayout extends JPanel implements ActionListener{
 		textfieldPanel.add(loadInstructions);
 		textfieldPanel.add(loadField);
 
-		JButton loadButton = new JButton ("Submit");
+		loadButton = new JButton ("Submit");
 		loadButton.setAlignmentX(CENTER_ALIGNMENT);
-		loadButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// swapPanel(gamePanel, welcomePanel);
-				gameMaster.loadGame(loadField.getText());
-				loadField.setText("");
-			}
-		});
-		
-		loadField.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// swapPanel(gamePanel, welcomePanel);
-				gameMaster.loadGame(loadField.getText());
-				loadField.setText("");
-			}
-		});	// Repeating the same code twice. Not good.
 		
 		textfieldPanel.add(loadButton);
 		
@@ -405,6 +399,50 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		return loadPanel;
 		}
+	
+	
+	public void loadGameScreen() {
+		loadButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameMaster.loadGame(loadField.getText());
+				loadField.setText("");
+			}
+		});
+		
+		loadField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameMaster.loadGame(loadField.getText());
+				loadField.setText("");
+			}
+		});
+	}
+	
+	
+	/** 
+	public void loadOpenGame() {
+		loadButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameMaster.openGames(loadField.getText());
+				loadField.setText("");
+			}
+		});
+		
+		loadField.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameMaster.openGames(loadField.getText());
+				loadField.setText("");
+			}
+		});
+	}
+	*/
 	
 
 

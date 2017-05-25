@@ -61,7 +61,7 @@ public class GameMaster {
 
 	public void setInterface(GameLayout gameLayout) {
 		this.gameLayout = gameLayout;
-		gameid = new BigInteger(130, random).toString(32);
+		gameid = new BigInteger(25, random).toString(32);
 	}
 
 
@@ -245,6 +245,18 @@ public class GameMaster {
 	}
 	
 	
+	public void listOpenGames(){
+		database.listOpenGames();
+	}
+	
+	public void loadOpenGame (String enteredPlayer1id) {
+		database.loadOpenGame(enteredPlayer1id);
+	}
+	
+	
+	public void hostOnlineGame () {
+		
+	}
 
 
 

@@ -108,10 +108,10 @@ public class DatabaseScoreboard {
 
 
 	public void saveGame (GameMaster gameMaster) {
-		
+
 		player1 = gameMaster.getPlayer1();
 		player2 = gameMaster.getPlayer2();
-		
+
 
 		try (
 				// Allocating a database "Connection" object.
@@ -185,8 +185,68 @@ public class DatabaseScoreboard {
 				String gameid = resultsetAfter.getString("game_id");
 				String player1 = resultsetAfter.getString("player_1");
 				String player2 = resultsetAfter.getString("player_2");
-				ConsoleGUI.sendToConsole(gameid + " - " + player1 + " vs " + player2);
+				ConsoleGUI.sendToConsole(player1 + " vs " + player2 + " - Game ID: " + gameid);
 			}
+		}
+
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+
+	public void listOpenGames() {
+		try (
+				// Allocating a database "Connection" object.
+				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
+						"Dina", "d+W<YaB.QZ>\"6,q5");
+
+				Statement listStatement = connect.createStatement();
+
+				) {
+			boolean playerFound = false;
+			String stringSelect = "select * from open_games";
+			ResultSet resultsetAfter = listStatement.executeQuery(stringSelect);
+			while (resultsetAfter.next()) {
+				String player1 = resultsetAfter.getString("player_1");
+				String player1id = resultsetAfter.getString("player_1_random");
+				String player2 = resultsetAfter.getString("player_2");
+				String player2id = resultsetAfter.getString("player_2_random");
+				ConsoleGUI.sendToConsole(player1 + " - player id: " + player1id);
+			}
+		}
+
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	
+	public void loadOpenGame(String playerId) {
+		try (
+				// Allocating a database "Connection" object.
+				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
+						"Dina", "d+W<YaB.QZ>\"6,q5");
+
+				Statement listStatement = connect.createStatement();
+
+				) {
+			boolean gameFound = false;
+			String stringSelect = "select * from open_games";
+			ResultSet resultsetAfter = listStatement.executeQuery(stringSelect);
+			while (resultsetAfter.next()) {
+				String player1 = resultsetAfter.getString("player_1");
+				String player1id = resultsetAfter.getString("player_1_random");
+				String player2 = resultsetAfter.getString("player_2");
+				String player2id = resultsetAfter.getString("player_2_random");
+				ConsoleGUI.sendToConsole(player1 + " - player id: " + player1id);
+				if (player1id.equals(playerId)) {
+					gameFound = true;
+					gameMaster.loadOpenGame(player1);
+				}
+			}
+			if (!gameFound)
+				ConsoleGUI.sendToConsole("The game id was not found. Please try again.");
 		}
 
 		catch (SQLException ex) {
