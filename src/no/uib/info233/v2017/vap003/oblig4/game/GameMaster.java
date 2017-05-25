@@ -242,6 +242,7 @@ public class GameMaster {
 				"\nGet your opponent to position 3");
 		
 		gameLayout.createNewPlayer();
+		gameLayout.createGameScreen();
 	}
 	
 	
