@@ -165,7 +165,7 @@ public class GameMaster {
 			System.out.println("------------");
 			player1.gameOver(score + (score * position));
 			player2.gameOver(score - (score * position));
-			gameLayout.removeInputField();
+			gameLayout.gameOverScreen();
 			updateRanking();
 		}
 
@@ -174,7 +174,7 @@ public class GameMaster {
 			System.out.println("------------");
 			player1.gameOver(score + (positionPoints * position));
 			player2.gameOver(score - (positionPoints * position));
-			gameLayout.removeInputField();
+			gameLayout.gameOverScreen();
 			updateRanking();
 		}
 

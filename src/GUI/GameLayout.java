@@ -250,7 +250,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	}
 	
 	// When the game is over. Simply remove the game panel and add a label saying "Game Over". Center it.
-	public void removeInputField() {
+	public void gameOverScreen() {
 		JLabel gameOver = new JLabel("Game Over");
 		gameOver.setHorizontalAlignment(SwingConstants.CENTER);
 		gameOver.setPreferredSize(new Dimension(500, 500));
