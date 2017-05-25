@@ -25,7 +25,7 @@ import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
 public class GameLayout extends JPanel implements ActionListener{
 
-	
+
 	private static final long serialVersionUID = 8945151505299015846L;
 	// For the start screen
 	private JTextField input = new JTextField();
@@ -55,13 +55,13 @@ public class GameLayout extends JPanel implements ActionListener{
 	// For the menu bar
 	private JMenuBar menubar;
 	private JMenu menu;
-	
-	
+
+
 	// For loading game, could have reused "input" and "submit"
 	private JTextField loadField;
 	private JButton loadButton;
-	
-	
+
+
 	private BorderLayout layout;
 
 
@@ -78,7 +78,7 @@ public class GameLayout extends JPanel implements ActionListener{
 		submit.setAlignmentX(CENTER_ALIGNMENT);
 		submit.setAlignmentY(CENTER_ALIGNMENT);
 		submit.addActionListener(this);
-		
+
 		createMenuBar();
 		createStartPanel();
 		createGUI();
@@ -99,7 +99,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	// Panel for entering player name
 
 	public void createNameInputPanel() {
-		
+
 		JLabel instructions = new JLabel ("Choose a name");
 
 		instructions.setAlignmentX(CENTER_ALIGNMENT);
@@ -114,10 +114,10 @@ public class GameLayout extends JPanel implements ActionListener{
 		insertNamePanel.setMinimumSize(new Dimension(500, 500));
 		insertNamePanel.setPreferredSize(new Dimension(500, 500));
 	}
-	
 
-	
-	
+
+
+
 	public int getMove () {
 		int move = Integer.parseInt(input.getText());
 		if (move < 0 || move > player.getEnergy()) {
@@ -127,9 +127,9 @@ public class GameLayout extends JPanel implements ActionListener{
 		input.setText("");
 		return move;
 	}
-	
+
 	public void createNewPlayer() {
-		
+
 		// Assign player 1.
 		if (gameMaster.getPlayer1() != null)
 			player = gameMaster.getPlayer1();
@@ -143,16 +143,16 @@ public class GameLayout extends JPanel implements ActionListener{
 		else
 			enemy = new Player("CPU");
 		ConsoleGUI.sendToConsole("Player " + enemy.getName() + " is added to the game." + newLine);
-		
+
 		// The formalities..
 		gameMaster.setPlayers(player, enemy);
 		player.registerGameMaster(gameMaster);
 		enemy.registerGameMaster(gameMaster);
-		
+
 		input.setText("");
 	}
-	
-	
+
+
 	public void makeNextMove() {
 		try {
 			int move = Integer.parseInt(input.getText());
@@ -179,7 +179,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	 */
 
 	public void createGameScreen () {
-		
+
 		if (gamePanel != null)
 			gamePanel.removeAll();
 
@@ -214,15 +214,15 @@ public class GameLayout extends JPanel implements ActionListener{
 		createArenaLabel("Choose your next move between 0 and " + player.getEnergy());
 
 		actionBar();
-		
+
 		gameStarted = true;
 
 		swapPanel (gamePanel);
-		
+
 		input.requestFocus();
 	}
 
-	
+
 	/** Update the information on the game screen after each round. Updates the player's
 	energy levels, round number and which field they are currently at.
 	Does so by removing the old components, adding the updated components and calling
@@ -248,7 +248,7 @@ public class GameLayout extends JPanel implements ActionListener{
 		revalidate();
 		repaint();
 	}
-	
+
 	// When the game is over. Simply remove the game panel and add a label saying "Game Over". Center it.
 	public void gameOverScreen() {
 		JLabel gameOver = new JLabel("Game Over");
@@ -283,7 +283,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 		actionPanel.add(input);
 		actionPanel.add(submitMove);
-		
+
 		input.addActionListener(this);
 		input.requestFocus();
 
@@ -294,11 +294,14 @@ public class GameLayout extends JPanel implements ActionListener{
 	// The menu bar.
 	public void createMenuBar() {
 		menubar = new JMenuBar();
+		menubar.setVisible(true);
 		menu = new JMenu("Local");
 		menubar.add(menu);
+		
+		// New Game
 		JMenuItem newGame = new JMenuItem("New Game");
+		menu.add(newGame);
 		newGame.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gameStarted = false;
@@ -306,99 +309,100 @@ public class GameLayout extends JPanel implements ActionListener{
 				insertNamePanel.removeAll();
 				gamePanel.removeAll();
 				createNameInputPanel();
-				// createLocalGame();
 				swapPanel(insertNamePanel);
 				input.requestFocus();
 			}
 		});
-		menu.add(newGame);
 		
+		// Save Game
 		JMenuItem saveGame = new JMenuItem("Save Game");
+		menu.add(saveGame);
 		saveGame.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// swapPanel(gamePanel, welcomePanel);
 				gameMaster.saveGame();
 			}
 		});
-		menu.add(saveGame);
 		
+		// Load Game
 		JMenuItem loadGame = new JMenuItem("Load Game");
+		menu.add(loadGame);
 		loadGame.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gameMaster.listSavedGames();
+				gameStarted = false;
 				swapPanel(loadField("Copy your gameid from the console and paste it here"));
 				loadGameScreen();
 			}
 		});
-		menu.add(loadGame);
 
+		// Online menus
 		menu = new JMenu("Online");
 		menubar.add(menu);
+		
+		// Host Game
 		JMenuItem hostGame = new JMenuItem("Host Game");
 		menu.add(hostGame);
+		
+		// Join Game
 		JMenuItem joinGame = new JMenuItem("Join Game");
+		menu.add(joinGame);
 		joinGame.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				gameStarted = false;
 				joinOnlineGame = true;
+				insertNamePanel.removeAll();
 				createNameInputPanel();
 				swapPanel(insertNamePanel);
-				
 			}
 		});
-		menu.add(joinGame);
-
-		menubar.setVisible(true);
 
 	}
-	
-	public JPanel loadField(String instructions) {
-		
 
-		
-		
+	public JPanel loadField(String instructions) {
+
+
+
+		// Creating panels to make components get centered.
 		JPanel loadPanel = new JPanel();
 		loadPanel.setLayout(new BorderLayout());
 		loadPanel.setPreferredSize(new Dimension(500, 500));
-		
+
 		JPanel inputPanel = new JPanel();
 		inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
-		
-		
+
+
 		JLabel loadInstructions = new JLabel(instructions);
 		loadInstructions.setPreferredSize(new Dimension(500, 200));
 		loadInstructions.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		
+
+
 		// Create an input text field.
 		Dimension textDimension = new Dimension(200, 25);
 		loadField = new JTextField(20);
 		loadField.setPreferredSize(textDimension);
 		loadField.setMinimumSize(textDimension);
 		loadField.setMaximumSize(textDimension);
-		
+
 		JPanel textfieldPanel = new JPanel();
 		textfieldPanel.add(loadInstructions);
 		textfieldPanel.add(loadField);
 
 		loadButton = new JButton ("Submit");
 		loadButton.setAlignmentX(CENTER_ALIGNMENT);
-		
+
 		textfieldPanel.add(loadButton);
-		
+
 		inputPanel.add(textfieldPanel);
-		
+
 		loadPanel.add(inputPanel,  BorderLayout.CENTER);
 
 		return loadPanel;
-		}
-	
-	
+	}
+
+
 	// Stupid solution part 1 of 2.
 	// Adds an action to the button and text field in the loadField method.
 	// Makes a search for game ID when loading a game.
@@ -411,7 +415,7 @@ public class GameLayout extends JPanel implements ActionListener{
 				loadField.setText("");
 			}
 		});
-		
+
 		loadField.addActionListener(new ActionListener() {
 
 			@Override
@@ -421,8 +425,8 @@ public class GameLayout extends JPanel implements ActionListener{
 			}
 		});
 	}
-	
-	
+
+
 	// Stupid solution part 2 of 2.
 	// Adds an action to the button and text field in the loadField method.
 	// Makes a search for player ID when joining an online game.
@@ -435,7 +439,7 @@ public class GameLayout extends JPanel implements ActionListener{
 				loadField.setText("");
 			}
 		});
-		
+
 		loadField.addActionListener(new ActionListener() {
 
 			@Override
@@ -445,7 +449,7 @@ public class GameLayout extends JPanel implements ActionListener{
 			}
 		});
 	}
-	
+
 
 
 	// Get method. Needed to add the menu to the Frame. Used in the GameFrame method.
@@ -460,35 +464,46 @@ public class GameLayout extends JPanel implements ActionListener{
 		welcomeText.setHorizontalAlignment(SwingConstants.CENTER);
 		welcomeText.setPreferredSize(new Dimension(500, 500));
 	}
-	
+
 	// Used for Game_ID in database... maybe.
 	public long getSerialNumber() {
 		return serialVersionUID;
 	}
-	
 
-	
+
+
 	// Creates a new player with name from input. Then starts a game
 	// If in a game, input is used to define next move.
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if (gameStarted) 
-			makeNextMove();
-		
+
+		// Making sure an empty input is not passed.
+		if (input.getText() == null) {
+			ConsoleGUI.sendToConsole("Input cannot be empty.");
+		}
 		else {
-			if (joinOnlineGame) {
-				joinOnlineGame = false;
-				enemy = new HumanPlayer(input.getText());
-				gameMaster.setPlayers(null, enemy);
-				swapPanel(loadField("Copy and paste one of the IDs from the console."));
-				gameMaster.listOpenGames();
-				loadOnlineGameScreen();
-				
-			}
+
+				// If a game has started
+			if (gameStarted) 
+				makeNextMove();
+
+			// If trying to join an online game, expect player_1_id input.
 			else {
-				createNewPlayer();
-				createGameScreen();
+				if (joinOnlineGame) {
+					joinOnlineGame = false;
+					enemy = new HumanPlayer(input.getText());
+					gameMaster.setPlayers(null, enemy);
+					swapPanel(loadField("Copy and paste one of the IDs from the console."));
+					gameMaster.listOpenGames();
+					loadOnlineGameScreen();
+
+				}
+				
+				// If starting a new local game.
+				else {
+					createNewPlayer();
+					createGameScreen();
+				}
 			}
 		}
 	}
