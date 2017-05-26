@@ -39,7 +39,7 @@ public class GameMaster {
 	// The game id. Used by the database.
 	private SecureRandom random = new SecureRandom();
 	private String gameid;
-	
+
 	// Access the database.
 	DatabaseScoreboard database;
 
@@ -48,8 +48,8 @@ public class GameMaster {
 	public GameMaster() {
 		this.database = new DatabaseScoreboard(this);
 	}
-	
-	
+
+
 
 
 	// Assign the players that are going to fight each other
@@ -219,91 +219,92 @@ public class GameMaster {
 	public void saveGame() {
 		database.saveGame(this);
 	}
-	
-	
+
+
 	// Load a game by giving a gameid as input.
 	public void loadGame(String enteredGameid) {
 		database.loadGame(enteredGameid);
 	}
-	
-	
+
+
 	// Assign the values from the database to the gameMaster
 	public void getLoadedGame(String gameid, String player1, String player2, int position,
 			int playerOneEnergy, int playerTwoEnergy) {
-		
+
 		this.gameid = gameid;
 		this.player1 = new HumanPlayer(player1, playerOneEnergy);
 		this.player2 = new Player(player2, playerTwoEnergy);
 		this.position = position;
 		this.round = 1;
-		
+
 		ConsoleGUI.sendToConsole("\n------------------------\nYou selected a game with gameid: " + gameid +
 				"\n" + player1 + " vs " + player2 + " - Position: " + position +
 				"\nGet your opponent to position 3");
-		
+
 		gameLayout.createNewPlayer();
 		gameLayout.createGameScreen();
 	}
-	
-	
+
+
 	public void listOpenGames(){
 		database.listOpenGames();
 	}
-	
+
 	public void loadOpenGame (String enteredPlayer1id) {
-		if (database.loadOpenGame(enteredPlayer1id)) {
-			
+		String addPlayerTwo = "update open_games set player_2 = '" + player2.getName() +
+				"', player_2_random = '" + player2.getPlayerRandom() + "' where player_1_random = " + "'"
+				+ enteredPlayer1id + "'";
+		if (database.loadOpenGame(enteredPlayer1id, addPlayerTwo))
+				gameLayout.createGameScreen();
+	}
+
+		public void hostOnlineGame () {
+
 		}
-	}
-	
-	
-	public void hostOnlineGame () {
-		
-	}
 
 
 
-	// Get method for player. Throws an exception if the player does not exist.
-	public Player getPlayer(Player player) {
-		if (player1.equals(player)) {
+		// Get method for player. Throws an exception if the player does not exist.
+		public Player getPlayer(Player player) {
+			if (player1.equals(player)) {
+				return player1;
+			} else if (player2.equals(player)) {
+				return player2;
+			}
+			else player = null;
+
+			return player;
+		}
+
+
+		public Player getPlayer1 () {
 			return player1;
-		} else if (player2.equals(player)) {
+		}
+
+		public Player getPlayer2 () {
 			return player2;
 		}
-		else player = null;
-		
-		return player;
-	}
 
+		public int getPosition() {
+			return position;
+		}
 
-	public Player getPlayer1 () {
-		return player1;
-	}
+		public int getRound() {
+			return round;
+		}
 
-	public Player getPlayer2 () {
-		return player2;
-	}
+		public String getGameid() {
+			return gameid;
+		}
 
-	public int getPosition() {
-		return position;
-	}
+		public void resetGame() {
+			player1 = null;
+			player2 = null;
+			round = 1;
+			position = 0;
+		}
 
-	public int getRound() {
-		return round;
+		public void listSavedGames() {
+			database.listSavedGames();
+		}
 	}
-	
-	public String getGameid() {
-		return gameid;
-	}
-	
-	public void resetGame() {
-		player1 = null;
-		player2 = null;
-		round = 1;
-		position = 0;
-	}
-	
-	public void listSavedGames() {
-		database.listSavedGames();
-	}
-}

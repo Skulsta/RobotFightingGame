@@ -204,14 +204,11 @@ public class DatabaseScoreboard {
 				Statement listStatement = connect.createStatement();
 
 				) {
-			boolean playerFound = false;
 			String stringSelect = "select * from open_games";
 			ResultSet resultsetAfter = listStatement.executeQuery(stringSelect);
 			while (resultsetAfter.next()) {
 				String player1 = resultsetAfter.getString("player_1");
 				String player1id = resultsetAfter.getString("player_1_random");
-				String player2 = resultsetAfter.getString("player_2");
-				String player2id = resultsetAfter.getString("player_2_random");
 				ConsoleGUI.sendToConsole(player1 + " - player id: " + player1id);
 			}
 		}
@@ -222,9 +219,9 @@ public class DatabaseScoreboard {
 	}
 	
 	
-	public boolean loadOpenGame(String playerId) {
+	public boolean loadOpenGame(String playerId, String addPlayerTwo) {
 		
-		boolean validGame = false;
+		boolean availableGame = false;
 		
 		try (
 				// Allocating a database "Connection" object.
@@ -232,6 +229,7 @@ public class DatabaseScoreboard {
 						"Dina", "d+W<YaB.QZ>\"6,q5");
 
 				Statement listStatement = connect.createStatement();
+				Statement addPlayer2Statement = connect.createStatement();
 
 				) {
 			String stringSelect = "select * from open_games";
@@ -240,15 +238,16 @@ public class DatabaseScoreboard {
 				String player1 = resultsetAfter.getString("player_1");
 				String player1id = resultsetAfter.getString("player_1_random");
 				String player2 = resultsetAfter.getString("player_2");
-				String player2id = resultsetAfter.getString("player_2_random");
 				ConsoleGUI.sendToConsole(player1 + " - player id: " + player1id);
 				if (player1id.equals(playerId)) {
-					if (player2 != null) {
-						validGame = true;
-						ConsoleGUI.sendToConsole("The game is available");
+					if (player2 == null) {
+						availableGame = true;
+						addPlayer2Statement.executeUpdate(addPlayerTwo);
 					}
 					else
-						ConsoleGUI.sendToConsole("Game no longer avaiable.");
+						ConsoleGUI.sendToConsole("---------------------\n" +
+								"Game no longer avaiable. Try another game." + 
+								"\n--------------------------");
 				}
 			}
 		}
@@ -256,6 +255,6 @@ public class DatabaseScoreboard {
 		catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		return validGame;
+		return availableGame;
 	}
 }
