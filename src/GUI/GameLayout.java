@@ -404,6 +404,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 
 	// Stupid solution part 1 of 2.
+	// Load a local game
 	// Adds an action to the button and text field in the loadField method.
 	// Makes a search for game ID when loading a game.
 	public void loadGameScreen() {
@@ -428,6 +429,7 @@ public class GameLayout extends JPanel implements ActionListener{
 
 
 	// Stupid solution part 2 of 2.
+	// Load a online game
 	// Adds an action to the button and text field in the loadField method.
 	// Makes a search for player ID when joining an online game.
 	public void loadOnlineGameScreen () {

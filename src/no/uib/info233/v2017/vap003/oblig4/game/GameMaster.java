@@ -254,12 +254,17 @@ public class GameMaster {
 		String addPlayerTwo = "update open_games set player_2 = '" + player2.getName() +
 				"', player_2_random = '" + player2.getPlayerRandom() + "' where player_1_random = " + "'"
 				+ enteredPlayer1id + "'";
-		if (database.loadOpenGame(enteredPlayer1id, addPlayerTwo))
-				gameLayout.createGameScreen();
+		
+		if (database.loadOpenGame(enteredPlayer1id, addPlayerTwo)) {
+			String gameInProgress = "select * from game_in_progress where player_1_random = '" + enteredPlayer1id + "'";
+			
+			
+			// gameLayout.createGameScreen();
+		}
 	}
 
 		public void hostOnlineGame () {
-
+			
 		}
 
 
@@ -272,7 +277,7 @@ public class GameMaster {
 				return player2;
 			}
 			else player = null;
-
+			
 			return player;
 		}
 
