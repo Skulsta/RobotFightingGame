@@ -35,6 +35,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	private JPanel insertNamePanel = new JPanel();
 	private boolean gameStarted = false;
 	private boolean joinOnlineGame = false;
+	private boolean hostOnlineGame = false;
 
 	// For the console
 	public final static String newLine = "\n";
@@ -60,6 +61,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	// For loading game, could have reused "input" and "submit"
 	private JTextField loadField;
 	private JButton loadButton;
+	private JPanel textfieldPanel;
 
 
 	private BorderLayout layout;
@@ -344,6 +346,17 @@ public class GameLayout extends JPanel implements ActionListener{
 		// Host Game
 		JMenuItem hostGame = new JMenuItem("Host Game");
 		menu.add(hostGame);
+		hostGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameStarted = false;
+				hostOnlineGame = true;
+				insertNamePanel.removeAll();
+				createNameInputPanel();
+				swapPanel(insertNamePanel);
+				input.requestFocus();
+			}
+		});
 		
 		// Join Game
 		JMenuItem joinGame = new JMenuItem("Join Game");
@@ -356,14 +369,13 @@ public class GameLayout extends JPanel implements ActionListener{
 				insertNamePanel.removeAll();
 				createNameInputPanel();
 				swapPanel(insertNamePanel);
+				input.requestFocus();
 			}
 		});
 
 	}
 
 	public JPanel loadField(String instructions) {
-
-
 
 		// Creating panels to make components get centered.
 		JPanel loadPanel = new JPanel();
@@ -386,7 +398,7 @@ public class GameLayout extends JPanel implements ActionListener{
 		loadField.setMinimumSize(textDimension);
 		loadField.setMaximumSize(textDimension);
 
-		JPanel textfieldPanel = new JPanel();
+		textfieldPanel = new JPanel();
 		textfieldPanel.add(loadInstructions);
 		textfieldPanel.add(loadField);
 
@@ -498,7 +510,17 @@ public class GameLayout extends JPanel implements ActionListener{
 					swapPanel(loadField("Copy and paste one of the IDs from the console."));
 					gameMaster.listOpenGames();
 					loadOnlineGameScreen();
-
+				}
+				else if (hostOnlineGame) {
+					hostOnlineGame = false;
+					player = new HumanPlayer(input.getText());
+					gameMaster.setPlayers(player, null);
+					swapPanel(loadField("Want to play with a friend? Give him/her the id below"));
+					textfieldPanel.remove(loadButton);
+					loadField.setText(gameMaster.getPlayer1().getPlayerRandom());
+					loadField.setEditable(false);
+					loadField.setHorizontalAlignment(JTextField.CENTER);
+					gameMaster.hostOnlineGame();
 				}
 				
 				// If starting a new local game.

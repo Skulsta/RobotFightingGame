@@ -262,9 +262,6 @@ public class GameMaster {
 				"', player_2_random = '" + player2.getPlayerRandom() + "' where player_1_random = " + "'"
 				+ enteredPlayer1id + "'";
 		
-		// Give the database some time to get updated.
-		ConsoleGUI.sendToConsole("Looking for your game...");
-		
 		database.loadOpenGame(enteredPlayer1id, addPlayerTwo);
 		
 		database.startOnlineGame();
@@ -303,7 +300,24 @@ public class GameMaster {
 	
 	
 	public void hostOnlineGame () {
-			
+		ConsoleGUI.sendToConsole("Creating online game...");
+		
+		String createOpenGame = "insert into open_games values ('" + player1.getName() + "', '" + player1.getPlayerRandom() +
+				"', NULL, NULL)";
+		
+		database.createOpenGame(createOpenGame);
+		
+	}
+	
+	
+	public String startOnlineGame () {
+		ConsoleGUI.sendToConsole("Starting the game.");
+		
+		String gameInProgress = "insert into game_in_progress values ('" + player1.getPlayerRandom() + player2.getPlayerRandom() +
+				"', '" + player1.getName() + "', '" + player2.getName() + "', 0, " + player1.getEnergy() + ", " +
+				player2.getEnergy() + ", NULL, NULL, 1)";
+		
+		return gameInProgress;
 	}
 
 
