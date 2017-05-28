@@ -272,6 +272,8 @@ public class GameMaster {
 	
 	public void getIntoOnlineGame (ResultSet gameInfo) {
 		
+		ConsoleGUI.sendToConsole("Something!");
+		
 		try {
 			gameid = gameInfo.getString(1);
 			String playerOneName = gameInfo.getString(2);
@@ -291,7 +293,6 @@ public class GameMaster {
 					"\nLet's fight!\n");
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -310,12 +311,14 @@ public class GameMaster {
 	}
 	
 	
-	public String startOnlineGame () {
+	public String startOnlineGame (String playerTwoId) {
 		ConsoleGUI.sendToConsole("Starting the game.");
 		
-		String gameInProgress = "insert into game_in_progress values ('" + player1.getPlayerRandom() + player2.getPlayerRandom() +
+		String gameInProgress = "insert into game_in_progress values ('" + player1.getPlayerRandom() + playerTwoId +
 				"', '" + player1.getName() + "', '" + player2.getName() + "', 0, " + player1.getEnergy() + ", " +
 				player2.getEnergy() + ", NULL, NULL, 1)";
+		
+		
 		
 		return gameInProgress;
 	}

@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import GUI.ConsoleGUI;
 import no.uib.info233.v2017.vap003.oblig4.game.GameMaster;
+import no.uib.info233.v2017.vap003.oblig4.player.HumanPlayer;
 import no.uib.info233.v2017.vap003.oblig4.player.Player;
 
 public class DatabaseScoreboard {
@@ -286,17 +287,20 @@ public class DatabaseScoreboard {
 								"Dina", "d+W<YaB.QZ>\"6,q5");
 
 						Statement joinStatement = connect.createStatement();
+						Statement updateStatement = connect.createStatement();
 
 						) {
 
 					String gameInProgress = "select * from game_in_progress";
 					ResultSet result = joinStatement.executeQuery(gameInProgress);
-					// ConsoleGUI.sendToConsole("Your game id is: " + enteredPlayer1id + player2.getPlayerRandom());
+					String stringUpdate = "update game_in_progress set player_2_energy = " + player2.getEnergy();
+					ConsoleGUI.sendToConsole("Your game id is: " + enteredPlayer1id + player2.getPlayerRandom());
 					ConsoleGUI.sendToConsole("...");
 					while (result.next()) {
 						String gameid = result.getString("game_id");
 						if (gameid.equals(enteredPlayer1id + player2.getPlayerRandom())) {
 							ConsoleGUI.sendToConsole("\nFound the game!");
+							updateStatement.executeUpdate(stringUpdate);
 							playerFound = true;
 							gameMaster.getIntoOnlineGame(result);
 						}
@@ -376,13 +380,13 @@ public class DatabaseScoreboard {
 						ResultSet resultsetAfter = lookStatement.executeQuery(stringSelect);
 						while (resultsetAfter.next()) {
 							String playerTwoName = resultsetAfter.getString("player_2");
+							String playerTwoId = resultsetAfter.getString("player_2_random");
 							if (playerTwoName != null) {
 								ConsoleGUI.sendToConsole("\nA player joined!");
-								player2 = new Player (playerTwoName);
+								player2 = new HumanPlayer (playerTwoName);
 								gameMaster.setPlayers(player1, player2);
 								playerFound = true;
-								insertStatement.executeUpdate(gameMaster.startOnlineGame());
-								ConsoleGUI.sendToConsole("Will it work?!");
+								insertStatement.executeUpdate(gameMaster.startOnlineGame(playerTwoId));
 							}
 						}
 						if (!playerFound)
