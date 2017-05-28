@@ -1,6 +1,9 @@
 package no.uib.info233.v2017.vap003.oblig4.game;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 import GUI.ConsoleGUI;
 import GUI.GameLayout;
@@ -42,6 +45,9 @@ public class GameMaster {
 
 	// Access the database.
 	DatabaseScoreboard database;
+	
+	// Saving the player1id if joining an online game
+	private String enteredPlayer1id;
 
 
 	// Private constructor so that the class cannot be instantiated.
@@ -251,21 +257,54 @@ public class GameMaster {
 	}
 
 	public void loadOpenGame (String enteredPlayer1id) {
+		this.enteredPlayer1id = enteredPlayer1id;
 		String addPlayerTwo = "update open_games set player_2 = '" + player2.getName() +
 				"', player_2_random = '" + player2.getPlayerRandom() + "' where player_1_random = " + "'"
 				+ enteredPlayer1id + "'";
 		
-		if (database.loadOpenGame(enteredPlayer1id, addPlayerTwo)) {
-			String gameInProgress = "select * from game_in_progress where player_1_random = '" + enteredPlayer1id + "'";
-			
-			
+		// Give the database some time to get updated.
+		ConsoleGUI.sendToConsole("Looking for your game...");
+		
+		database.loadOpenGame(enteredPlayer1id, addPlayerTwo);
+		
+		database.startOnlineGame();
 			// gameLayout.createGameScreen();
+		
+	}
+	
+	
+	public void getIntoOnlineGame (ResultSet gameInfo) {
+		
+		try {
+			gameid = gameInfo.getString(1);
+			String playerOneName = gameInfo.getString(2);
+			String playerTwoName = gameInfo.getString(3);
+			position = gameInfo.getInt(4);
+			int player_1_energy = gameInfo.getInt(5);
+			int player_2_energy = gameInfo.getInt(6);
+			playerOneMove = gameInfo.getInt(7);
+			playerTwoMove = gameInfo.getInt(8);
+			round = gameInfo.getInt(9);
+			
+			player1 = new HumanPlayer(playerOneName, player_1_energy);
+			player2 = new HumanPlayer(playerTwoName, player_2_energy);
+			
+			ConsoleGUI.sendToConsole("\n" + player1.getName() + " is player 1.\n" + player2.getName() + 
+					" is player2.\nPlayer 1, get your opponent to arena 3 to win.\nPlayer 2, get your opponent to areana -3\n" +
+					"\nLet's fight!\n");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 	}
 
-		public void hostOnlineGame () {
+	
+	
+	public void hostOnlineGame () {
 			
-		}
+	}
 
 
 

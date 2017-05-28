@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import GUI.ConsoleGUI;
 import no.uib.info233.v2017.vap003.oblig4.game.GameMaster;
@@ -15,6 +17,10 @@ public class DatabaseScoreboard {
 	private GameMaster gameMaster;
 	private Player player1;
 	private Player player2;
+	private String enteredPlayer1id;
+	
+	// Temp
+	private int i;
 
 	public DatabaseScoreboard(GameMaster gameMaster) {
 		this.gameMaster = gameMaster;
@@ -217,12 +223,12 @@ public class DatabaseScoreboard {
 			ex.printStackTrace();
 		}
 	}
-	
-	
-	public boolean loadOpenGame(String playerId, String addPlayerTwo) {
+
+
+	public void loadOpenGame(String playerId, String addPlayerTwo) {
 		
-		boolean availableGame = false;
-		
+		enteredPlayer1id = playerId;
+
 		try (
 				// Allocating a database "Connection" object.
 				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
@@ -240,8 +246,7 @@ public class DatabaseScoreboard {
 				String player2 = resultsetAfter.getString("player_2");
 				ConsoleGUI.sendToConsole(player1 + " - player id: " + player1id);
 				if (player1id.equals(playerId)) {
-					if (player2 == null) {
-						availableGame = true;
+					if (player2 != null) {
 						addPlayer2Statement.executeUpdate(addPlayerTwo);
 					}
 					else
@@ -255,6 +260,73 @@ public class DatabaseScoreboard {
 		catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		return availableGame;
 	}
+
+
+	public void startOnlineGame () {
+		
+		ConsoleGUI.sendToConsole("\nGoing through game IDs...\n\n");
+		
+		// Create a delay to give the database some time, and look for the game multiple times if not found.
+		Thread lookForGameInProgress = new Thread(new Runnable() {
+		    public void run() {
+		    	
+				player2 = gameMaster.getPlayer2();
+				boolean gameFound = false;
+		        
+		
+		try (
+				// Allocating a database "Connection" object.
+				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
+						"Dina", "d+W<YaB.QZ>\"6,q5");
+
+				Statement joinStatement = connect.createStatement();
+
+				) {
+			
+			// Give the database some time to get updated.
+			/**
+			try {
+				TimeUnit.SECONDS.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
+			
+			String gameInProgress = "select * from game_in_progress";
+			ResultSet result = joinStatement.executeQuery(gameInProgress);
+			// ConsoleGUI.sendToConsole("Your game id is: " + enteredPlayer1id + player2.getPlayerRandom());
+			ConsoleGUI.sendToConsole("...");
+			while (result.next()) {
+				String gameid = result.getString("game_id");
+				if (gameid.equals(enteredPlayer1id + player2.getPlayerRandom())) {
+					ConsoleGUI.sendToConsole("\nFound the game!");
+					gameFound = true;
+					gameMaster.getIntoOnlineGame(result);
+				}
+			}
+
+		}
+
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		
+		    }
+		});
+		
+		// lookForGameInProgress.start();
+		
+		// Create a scheduled pool with 1 thread. 5 second delay, tries to find the match 3 times.
+		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+		executor.scheduleAtFixedRate(lookForGameInProgress, 5, 3, TimeUnit.SECONDS);
+	}
+	
+	
+	public void lookForGameInProgress () {
+		
+	}
+
+
 }
