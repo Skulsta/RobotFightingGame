@@ -265,14 +265,11 @@ public class GameMaster {
 		database.loadOpenGame(enteredPlayer1id, addPlayerTwo);
 		
 		database.startOnlineGame();
-			// gameLayout.createGameScreen();
 		
 	}
 	
 	
 	public void getIntoOnlineGame (ResultSet gameInfo) {
-		
-		ConsoleGUI.sendToConsole("Something!");
 		
 		try {
 			gameid = gameInfo.getString(1);
@@ -291,6 +288,8 @@ public class GameMaster {
 			ConsoleGUI.sendToConsole("\n" + player1.getName() + " is player 1.\n" + player2.getName() + 
 					" is player2.\nPlayer 1, get your opponent to arena 3 to win.\nPlayer 2, get your opponent to areana -3\n" +
 					"\nLet's fight!\n");
+			
+			gameLayout.createGameScreen();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

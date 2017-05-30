@@ -268,7 +268,7 @@ public class DatabaseScoreboard {
 
 	public void startOnlineGame () {
 
-		ConsoleGUI.sendToConsole("Waiting for game to start.\n");
+		ConsoleGUI.sendToConsole("Waiting for game to start...\n");
 
 		// Create a delay to give the database some time, and look for the game multiple times if not found.
 
@@ -278,7 +278,7 @@ public class DatabaseScoreboard {
 			public void run() {
 				while (!playerFound)
 					try {
-						Thread.sleep((long) 5000);
+						Thread.sleep((long) 2000);
 
 
 				try (
@@ -305,7 +305,6 @@ public class DatabaseScoreboard {
 							gameMaster.getIntoOnlineGame(result);
 						}
 					}
-
 				}
 
 				catch (SQLException ex) {
@@ -355,7 +354,7 @@ public class DatabaseScoreboard {
 
 	public void createGameInProgress () {
 		
-		ConsoleGUI.sendToConsole("Waiting for player 2");
+		ConsoleGUI.sendToConsole("Waiting for player 2...");
 
 		player1 = gameMaster.getPlayer1();
 
@@ -363,7 +362,7 @@ public class DatabaseScoreboard {
 			public void run() {
 				while (!playerFound)
 					try {
-						Thread.sleep((long) 5000);
+						Thread.sleep((long) 2000);
 
 					try (
 							// Allocating a database "Connection" object.
@@ -372,6 +371,7 @@ public class DatabaseScoreboard {
 
 							Statement lookStatement = connect.createStatement();
 							Statement insertStatement = connect.createStatement();
+							Statement joinStatement = connect.createStatement();
 
 							) {
 
@@ -387,6 +387,19 @@ public class DatabaseScoreboard {
 								gameMaster.setPlayers(player1, player2);
 								playerFound = true;
 								insertStatement.executeUpdate(gameMaster.startOnlineGame(playerTwoId));
+								
+								// Update the gameMaster with the correct information.
+								String gameInProgress = "select * from game_in_progress";
+								ResultSet updateResult = joinStatement.executeQuery(gameInProgress);
+								while (updateResult.next()) {
+									String gameid = updateResult.getString("game_id");
+									if (gameid.equals(player1.getPlayerRandom() + playerTwoId)) {
+										ConsoleGUI.sendToConsole("\nEverything is ready.");
+										playerFound = true;
+										gameMaster.getIntoOnlineGame(updateResult);
+									}
+								}
+								
 							}
 						}
 						if (!playerFound)

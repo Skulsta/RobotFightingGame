@@ -181,9 +181,10 @@ public class GameLayout extends JPanel implements ActionListener{
 	 */
 
 	public void createGameScreen () {
+		
+		gameStarted = true;
 
-		if (gamePanel != null)
-			gamePanel.removeAll();
+		gamePanel.removeAll();
 
 		gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
 
