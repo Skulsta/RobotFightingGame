@@ -3,6 +3,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import GUI.ConsoleGUI;
@@ -36,6 +37,7 @@ public class GameMaster {
 
 	private GameLayout gameLayout;
 
+	private boolean inOnlineGame = false;
 	// Keeps track of how many rounds the players has played in a game.
 	private int round = 1;
 
@@ -86,7 +88,59 @@ public class GameMaster {
 	 * equal to the available energy he has, invalid and set to 0 if not.
 	 */
 	public void listenToPlayerMove(Player player, int move) {
-
+		
+		if (inOnlineGame) {
+			ConsoleGUI.sendToConsole("Round: " + round);
+			if (player == player1) {
+				String updatePlayerMove = "update game_in_progress set player_1_move = " + move + " where game_id = " + gameid;
+				database.inOnlineGame(updatePlayerMove);
+				playerOneMove = move;
+				ConsoleGUI.sendToConsole("You are: " + player.getName() + ". Your move was: " + playerOneMove);
+				ConsoleGUI.sendToConsole("\nThe last bit is still missing. Close but no cigar.");
+				
+				
+			} else if (player == player2) {
+				String updatePlayerMove = "update game_in_progress set player_2_move = " + move + " where game_id = " + gameid;
+				database.inOnlineGame(updatePlayerMove);
+				playerTwoMove = move;
+				
+				ConsoleGUI.sendToConsole("Player 2 has made a move.");
+				ConsoleGUI.sendToConsole("You are: " + player.getName() + ". Your move was: " + playerOneMove);
+				
+			} else if (player != player1 && player != player2)
+				ConsoleGUI.sendToConsole("You are none of the players somehow.");
+		
+		
+		/**
+		Thread getPlayerMoves = new Thread(new Runnable() {
+			public void run() {
+				// while ((!(playerOneMove >= 0)) || (!(playerTwoMove >= 0)))
+					try {
+						ConsoleGUI.sendToConsole("You got 7 seconds to choose your move.");
+						Thread.sleep((long) 7000);
+						String getPlayerMove = "select player_1_move, player_2_move from game_in_progress where game_id = '" + gameid + "'";
+						database.inOnlineGameGetPlayerMove(getPlayerMove);
+						
+						ConsoleGUI.sendToConsole(player1.getName() + "Used " + playerOneMove + "Energy points.");
+						ConsoleGUI.sendToConsole(player2.getName() + "Used " + playerTwoMove + "Energy points.");
+						
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} finally {
+						ConsoleGUI.sendToConsole("");
+					}
+				}
+			});
+		
+		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
+		
+		executor.execute(getPlayerMoves);
+		
+		*/
+		}
+		
+		else {
 
 		// Assigning the right move to the right player. Throw exception if not a valid player.
 		if (player == player1) {
@@ -94,10 +148,20 @@ public class GameMaster {
 		} else if (player == player2) {
 			playerTwoMove = move;
 		} else throw new IllegalArgumentException("Input must be 'player1' or 'player2'.");
-
+		}
+		
+		
 		// If both players have called makeNextMove method, proceed.
-		if ((playerOneMove != null) && (playerTwoMove != null))
+		if ((playerOneMove >= 0) && (playerTwoMove >= 0)) {
 			evaluateTurn();
+			ConsoleGUI.sendToConsole("Both players have made a move.");
+		}
+	}
+	
+	
+	public void setPlayerMove(int playerOneMove, int playerTwoMove) {
+		this.playerOneMove = playerOneMove;
+		this.playerTwoMove = playerTwoMove;
 	}
 
 
@@ -278,23 +342,35 @@ public class GameMaster {
 			position = gameInfo.getInt(4);
 			int player_1_energy = gameInfo.getInt(5);
 			int player_2_energy = gameInfo.getInt(6);
-			playerOneMove = gameInfo.getInt(7);
-			playerTwoMove = gameInfo.getInt(8);
+			// playerOneMove = gameInfo.getInt(7);
+			// playerTwoMove = gameInfo.getInt(8);
 			round = gameInfo.getInt(9);
 			
-			player1 = new HumanPlayer(playerOneName, player_1_energy);
-			player2 = new HumanPlayer(playerTwoName, player_2_energy);
+			if (player1 == null)
+				player1 = new HumanPlayer(playerOneName, player_1_energy);
+			
+			if (player2 == null)
+				player2 = new HumanPlayer(playerTwoName, player_2_energy);
+			
+			inOnlineGame = true;
 			
 			ConsoleGUI.sendToConsole("\n" + player1.getName() + " is player 1.\n" + player2.getName() + 
-					" is player2.\nPlayer 1, get your opponent to arena 3 to win.\nPlayer 2, get your opponent to areana -3\n" +
+					" is player2.\n" +
 					"\nLet's fight!\n");
 			
-			gameLayout.createGameScreen();
+			gameLayout.setUpOnlineGame();
 			
+			ConsoleGUI.sendToConsole("Choose your move.");
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	
+	public void inOnlineGame() {
+		String updatePlayerOne = "update game_in_progress set player_1_move = '" + playerOneMove;
 	}
 
 	

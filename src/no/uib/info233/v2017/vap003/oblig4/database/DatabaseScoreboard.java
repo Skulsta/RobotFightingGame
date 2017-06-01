@@ -1,5 +1,6 @@
 package no.uib.info233.v2017.vap003.oblig4.database;
 
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -421,10 +422,52 @@ public class DatabaseScoreboard {
 		});
 
 		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
-		// executor.scheduleAtFixedRate(lookForPlayer2, 5, 5, TimeUnit.SECONDS);
 		
 		executor.execute(lookForPlayer2);
+	}
+	
+	public void inOnlineGame (String updateGame) {
+		try (
+				// Allocating a database "Connection" object.
+				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
+						"Dina", "d+W<YaB.QZ>\"6,q5");
 
-		
+				Statement listStatement = connect.createStatement();
+
+				) {
+			listStatement.executeUpdate(updateGame);
+			ConsoleGUI.sendToConsole("Move registered. Waiting for the other player...");
+
+		}
+
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	
+	
+	public void inOnlineGameGetPlayerMove (String playerMove) {
+		try (
+				// Allocating a database "Connection" object.
+				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
+						"Dina", "d+W<YaB.QZ>\"6,q5");
+
+				Statement listStatement = connect.createStatement();
+
+				) {
+			ResultSet result = listStatement.executeQuery(playerMove);
+			ConsoleGUI.sendToConsole("Move registered. Waiting for the other player...");
+			while (result.next()) {
+				int playerOneMove = result.getInt("player_1_move");
+				int playerTwoMove = result.getInt("player_2_move");
+				gameMaster.setPlayerMove(playerOneMove, playerTwoMove);
+			}
+
+		}
+
+		catch (SQLException ex) {
+			ex.printStackTrace();
+		}
 	}
 }

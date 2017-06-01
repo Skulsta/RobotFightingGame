@@ -36,6 +36,7 @@ public class GameLayout extends JPanel implements ActionListener{
 	private boolean gameStarted = false;
 	private boolean joinOnlineGame = false;
 	private boolean hostOnlineGame = false;
+	private boolean inOnlineGame = false;
 
 	// For the console
 	public final static String newLine = "\n";
@@ -159,7 +160,7 @@ public class GameLayout extends JPanel implements ActionListener{
 		try {
 			int move = Integer.parseInt(input.getText());
 			if (move >= 0 || move <= player.getEnergy()) {
-				enemy.makeNextMove(gameMaster.getPosition(), enemy.getEnergy(), player.getEnergy());
+				// enemy.makeNextMove(gameMaster.getPosition(), enemy.getEnergy(), player.getEnergy());
 				gameMaster.listenToPlayerMove(player, getMove());
 			}
 			else {
@@ -184,7 +185,8 @@ public class GameLayout extends JPanel implements ActionListener{
 		
 		gameStarted = true;
 
-		gamePanel.removeAll();
+		if (gamePanel != null)
+			gamePanel.removeAll();
 
 		gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
 
@@ -221,6 +223,9 @@ public class GameLayout extends JPanel implements ActionListener{
 		gameStarted = true;
 
 		swapPanel (gamePanel);
+		
+		gamePanel.revalidate();
+		gamePanel.repaint();
 
 		input.requestFocus();
 	}
@@ -484,6 +489,35 @@ public class GameLayout extends JPanel implements ActionListener{
 	public long getSerialNumber() {
 		return serialVersionUID;
 	}
+	
+	
+	public void setUpOnlineGame () {
+		ConsoleGUI.sendToConsole("Show this shit");
+		
+		if (gameMaster.getPlayer2() != null)
+			enemy = gameMaster.getPlayer1();
+		else {
+			player = gameMaster.getPlayer1();
+			enemy = gameMaster.getPlayer2();
+		}
+		
+		
+		createGameScreen();
+	}
+	
+	
+	public boolean getGameStarted() {
+		return gameStarted;
+	}
+	
+	
+	public boolean getInOnlineGame() {
+		return inOnlineGame;
+	}
+	
+	public void setPlayer (Player player) {
+		this.player = player;
+	}
 
 
 
@@ -504,8 +538,10 @@ public class GameLayout extends JPanel implements ActionListener{
 
 			// If trying to join an online game, expect player_1_id input.
 			else {
-				if (joinOnlineGame) {
-					joinOnlineGame = false;
+				if (inOnlineGame) {
+					makeNextMove();
+				}
+				else if (joinOnlineGame) {
 					enemy = new HumanPlayer(input.getText());
 					gameMaster.setPlayers(null, enemy);
 					swapPanel(loadField("Copy and paste one of the IDs from the console."));
@@ -513,7 +549,6 @@ public class GameLayout extends JPanel implements ActionListener{
 					loadOnlineGameScreen();
 				}
 				else if (hostOnlineGame) {
-					hostOnlineGame = false;
 					player = new HumanPlayer(input.getText());
 					gameMaster.setPlayers(player, null);
 					swapPanel(loadField("Want to play with a friend? Give him/her the id below"));
