@@ -494,8 +494,17 @@ public class GameLayout extends JPanel implements ActionListener{
 	public void setUpOnlineGame () {
 		ConsoleGUI.sendToConsole("Show this shit");
 		
-		if (gameMaster.getPlayer2() != null)
+		if (joinOnlineGame) {
 			enemy = gameMaster.getPlayer1();
+			player = gameMaster.getPlayer2();
+			ConsoleGUI.sendToConsole("Welcome " + player.getName() + ". Player 1 is: " + enemy.getName());
+		}
+		
+		if (hostOnlineGame) {
+			player = gameMaster.getPlayer1();
+			enemy = gameMaster.getPlayer2();
+			ConsoleGUI.sendToConsole("Welcome " + player.getName() + ". Player 2 is: " + enemy.getName());
+		}
 		else {
 			player = gameMaster.getPlayer1();
 			enemy = gameMaster.getPlayer2();
@@ -518,6 +527,16 @@ public class GameLayout extends JPanel implements ActionListener{
 	public void setPlayer (Player player) {
 		this.player = player;
 	}
+	
+	
+	public boolean getJoinOnlineGame() {
+		return joinOnlineGame;
+	}
+	
+	public boolean getHostOnlineGame() {
+		return hostOnlineGame;
+	}
+	
 
 
 

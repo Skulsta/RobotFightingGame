@@ -91,24 +91,21 @@ public class GameMaster {
 		
 		if (inOnlineGame) {
 			ConsoleGUI.sendToConsole("Round: " + round);
-			if (player == player1) {
+			if (gameLayout.getHostOnlineGame()) {
 				String updatePlayerMove = "update game_in_progress set player_1_move = " + move + " where game_id = " + gameid;
 				database.inOnlineGame(updatePlayerMove);
 				playerOneMove = move;
 				ConsoleGUI.sendToConsole("You are: " + player.getName() + ". Your move was: " + playerOneMove);
-				ConsoleGUI.sendToConsole("\nThe last bit is still missing. Close but no cigar.");
 				
 				
-			} else if (player == player2) {
+			} else if (gameLayout.getJoinOnlineGame()) {
 				String updatePlayerMove = "update game_in_progress set player_2_move = " + move + " where game_id = " + gameid;
 				database.inOnlineGame(updatePlayerMove);
 				playerTwoMove = move;
 				
 				ConsoleGUI.sendToConsole("Player 2 has made a move.");
-				ConsoleGUI.sendToConsole("You are: " + player.getName() + ". Your move was: " + playerOneMove);
-				
-			} else if (player != player1 && player != player2)
-				ConsoleGUI.sendToConsole("You are none of the players somehow.");
+				ConsoleGUI.sendToConsole("You are: " + player.getName() + ". Your move was: " + playerTwoMove);
+			}
 		
 		
 		/**
