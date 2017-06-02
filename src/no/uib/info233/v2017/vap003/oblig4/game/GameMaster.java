@@ -39,7 +39,7 @@ public class GameMaster {
 
 	private boolean inOnlineGame = false;
 	// Keeps track of how many rounds the players has played in a game.
-	private int round = 1;
+	private int round = 0;
 
 	// The game id. Used by the database.
 	private SecureRandom random = new SecureRandom();
@@ -89,71 +89,68 @@ public class GameMaster {
 	 */
 	public void listenToPlayerMove(Player player, int move) {
 		
-		if (inOnlineGame) {
-			ConsoleGUI.sendToConsole("Round: " + round);
-			if (gameLayout.getHostOnlineGame()) {
-				String updatePlayerMove = "update game_in_progress set player_1_move = " + move + " where game_id = " + gameid;
-				database.inOnlineGame(updatePlayerMove);
-				playerOneMove = move;
-				ConsoleGUI.sendToConsole("You are: " + player.getName() + ". Your move was: " + playerOneMove);
-				
-				
-			} else if (gameLayout.getJoinOnlineGame()) {
-				String updatePlayerMove = "update game_in_progress set player_2_move = " + move + " where game_id = " + gameid;
-				database.inOnlineGame(updatePlayerMove);
-				playerTwoMove = move;
-				
-				ConsoleGUI.sendToConsole("Player 2 has made a move.");
-				ConsoleGUI.sendToConsole("You are: " + player.getName() + ". Your move was: " + playerTwoMove);
-			}
-		
-		
-		/**
-		Thread getPlayerMoves = new Thread(new Runnable() {
-			public void run() {
-				// while ((!(playerOneMove >= 0)) || (!(playerTwoMove >= 0)))
-					try {
-						ConsoleGUI.sendToConsole("You got 7 seconds to choose your move.");
-						Thread.sleep((long) 7000);
-						String getPlayerMove = "select player_1_move, player_2_move from game_in_progress where game_id = '" + gameid + "'";
-						database.inOnlineGameGetPlayerMove(getPlayerMove);
-						
-						ConsoleGUI.sendToConsole(player1.getName() + "Used " + playerOneMove + "Energy points.");
-						ConsoleGUI.sendToConsole(player2.getName() + "Used " + playerTwoMove + "Energy points.");
-						
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} finally {
-						ConsoleGUI.sendToConsole("");
-					}
-				}
-			});
-		
-		ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
-		
-		executor.execute(getPlayerMoves);
-		
-		*/
-		}
-		
-		else {
-
+		if (!inOnlineGame) {
 		// Assigning the right move to the right player. Throw exception if not a valid player.
 		if (player == player1) {
 			playerOneMove = move;
 		} else if (player == player2) {
 			playerTwoMove = move;
 		} else throw new IllegalArgumentException("Input must be 'player1' or 'player2'.");
-		}
 		
-		
-		// If both players have called makeNextMove method, proceed.
-		if ((playerOneMove >= 0) && (playerTwoMove >= 0)) {
-			evaluateTurn();
-			ConsoleGUI.sendToConsole("Both players have made a move.");
-		}
 	}
+		
+		if (inOnlineGame) {
+			ConsoleGUI.sendToConsole("Round: " + round);
+			
+			if (gameLayout.getHostOnlineGame()) {
+				String updatePlayerMove = "update game_in_progress set player_1_move = " + move + " where game_id = '" + gameid + "'";
+				database.inOnlineGame(updatePlayerMove);
+				playerOneMove = move;
+				ConsoleGUI.sendToConsole("Your move was: " + playerOneMove);
+				ConsoleGUI.sendToConsole("Waiting for the other player...");
+				
+				Thread lookForPlayerMove = new Thread(new Runnable() {
+					public void run() {
+						while (playerTwoMove == null) {
+							try {
+								Thread.sleep((long) 2000);
+								ConsoleGUI.sendToConsole("...");
+								database.inOnlineGameGetPlayerMove();
+								ConsoleGUI.sendToConsole("" + playerTwoMove);
+							
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} finally {
+						ConsoleGUI.sendToConsole("");
+					}
+					}
+				}
+			});
+					ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(10);
+					
+					executor.execute(lookForPlayerMove);
+				}
+				
+					
+				
+				
+			 else if (gameLayout.getJoinOnlineGame()) {
+				String updatePlayerMove = "update game_in_progress set player_2_move = " + move + " where game_id = '" + gameid + "'";
+				database.inOnlineGame(updatePlayerMove);
+				playerTwoMove = move;
+
+				ConsoleGUI.sendToConsole("Your move was: " + playerTwoMove);
+				ConsoleGUI.sendToConsole("Waiting for the other player...");
+			}
+		}
+
+			// If both players have called makeNextMove method, proceed.
+			if ((playerOneMove != null) && (playerTwoMove != null)) {
+				evaluateTurn();
+				ConsoleGUI.sendToConsole("Both players have made a move.");
+			}
+		}
 	
 	
 	public void setPlayerMove(int playerOneMove, int playerTwoMove) {
@@ -439,5 +436,10 @@ public class GameMaster {
 
 		public void listSavedGames() {
 			database.listSavedGames();
+		}
+		
+		
+		public void setPlayerTwoMove (int playerTwoMove) {
+			this.playerTwoMove = playerTwoMove;
 		}
 	}

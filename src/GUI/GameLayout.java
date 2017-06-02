@@ -492,7 +492,6 @@ public class GameLayout extends JPanel implements ActionListener{
 	
 	
 	public void setUpOnlineGame () {
-		ConsoleGUI.sendToConsole("Show this shit");
 		
 		if (joinOnlineGame) {
 			enemy = gameMaster.getPlayer1();

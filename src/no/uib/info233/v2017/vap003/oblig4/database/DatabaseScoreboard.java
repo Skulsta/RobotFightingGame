@@ -433,11 +433,18 @@ public class DatabaseScoreboard {
 						"Dina", "d+W<YaB.QZ>\"6,q5");
 
 				Statement listStatement = connect.createStatement();
+				Statement updateStatement = connect.createStatement();
 
 				) {
-			listStatement.executeUpdate(updateGame);
-			ConsoleGUI.sendToConsole("Move registered. Waiting for the other player...");
-
+			
+			String playerMoves = "select * from game_in_progress where game_id = '" + gameMaster.getGameid() + "'";
+			ResultSet result = listStatement.executeQuery(playerMoves);
+			while (result.next()) {
+				String gameid = result.getString("game_id");
+				if (gameid.equals(gameMaster.getGameid())) {
+					updateStatement.executeUpdate(updateGame);
+				}
+			}
 		}
 
 		catch (SQLException ex) {
@@ -447,7 +454,8 @@ public class DatabaseScoreboard {
 	
 	
 	
-	public void inOnlineGameGetPlayerMove (String playerMove) {
+	public void inOnlineGameGetPlayerMove () {
+		
 		try (
 				// Allocating a database "Connection" object.
 				Connection connect = DriverManager.getConnection("jdbc:mysql://wildboy.uib.no/oblig4?useSSL=false",
@@ -456,14 +464,13 @@ public class DatabaseScoreboard {
 				Statement listStatement = connect.createStatement();
 
 				) {
-			ResultSet result = listStatement.executeQuery(playerMove);
-			ConsoleGUI.sendToConsole("Move registered. Waiting for the other player...");
+			String playerMoves = "select * from game_in_progress where game_id = '" + gameMaster.getGameid() + "'";
+			ResultSet result = listStatement.executeQuery(playerMoves);
 			while (result.next()) {
 				int playerOneMove = result.getInt("player_1_move");
 				int playerTwoMove = result.getInt("player_2_move");
 				gameMaster.setPlayerMove(playerOneMove, playerTwoMove);
 			}
-
 		}
 
 		catch (SQLException ex) {
